@@ -1,0 +1,260 @@
+{include file='public/header'}
+<style>
+    table td,th{
+        text-align: center;
+    }
+    #page {
+        float: left;
+        margin: 20px 0 10px 0;
+    }
+    #page a{
+        display: inline-block;
+        border: 1px solid  #A0A0A0;
+        margin-left: 5px;
+        width: 30px;
+        text-align: center;
+        text-decoration: none;
+        border-radius:2px;
+        color: #A0A0A0;
+    }
+    #page .prev{
+        width:50px;
+    }
+    #page .next{
+        width:50px;
+    }
+
+    #page p{
+        margin-left:5px;
+        display:inline-block;
+    }
+    #page .cur{
+        background: #077EE3;
+    }
+
+</style>
+<script src="__EXTEND__/ueditor/ueditor.config.js"></script>
+<script src="__EXTEND__/ueditor/ueditor.all.js"></script>
+<script src="__EXTEND__/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script src="__EXTEND__/ueditor/ueditor.parse.js"></script>
+<div class="main">
+    <div class="list-group" style="width:100%;height:25px;border-bottom:0.3px solid silver" >
+        <ul class="" id="navInfo">
+            <li><a href="{:url('admin/index/index')}">首页</a>&raquo;</li>
+            <li><a href="#">系统设置</a>&raquo;</li>
+            <li><a href="{:url('admin/SystemSetup/noticeManage')}">公告管理</a><li>
+        </ul>
+    </div>
+    <div>
+        <div class="btn-group" role="group" >
+            <button type="button" class="btn btn-default">添加新公告</button>
+            <button type="button" class="btn btn-default">编辑公告</button>
+            <button type="button" class="btn btn-default">显示公告</button>
+            <button type="button" class="btn btn-default">隐藏公告</button>
+        </div>
+        <div id="tab-notice">
+            {$list}
+            <table class="table table-hover" >
+                <tr>
+                    <th></th>
+                    <th>ID</th>
+                    <th>标题</th>
+                    <th>是否置顶</th>
+                    <th>是否显示</th>
+                    <th>发布时间</th>
+                    <th>更新时间</th>
+                </tr>
+                {if condition="!empty($notice)"}
+                {volist name="notice" id="notices"}
+                <tr>
+                    <td><input type="checkbox" noticeid="{$notices.id}" isshow="{$notices.isshow}"></td>
+                    <td>{$notices.id}</td>
+                    <td>{$notices.title}</td>
+                    {if condition="$notices.istop=='是'"}
+                    <td><button class="btn btn-success btn-xs">是</button></td>
+                    {else /}
+                    <td><button class="btn btn-danger btn-xs">否</button></td>
+                    {/if}
+                    {if condition="$notices.isshow=='是'"}
+                    <td><button class="btn btn-success btn-xs" isshow="是" noticeid="{$notices.id}">是</button></td>
+                    {else /}
+                    <td><button class="btn btn-danger btn-xs" isshow="否" noticeid="{$notices.id}">否</button></td>
+                    {/if}
+                    <td>{$notices.addtime}</td>
+                    <td>{$notices.updatetime}</td>
+                </tr>
+                {/volist}
+                {/if}
+            </table>
+        </div>
+    </div>
+    <!--添加新公告-->
+    <div id="add-notice" style="display:none;padding-top:20px;">
+        <form class="form-horizontal" action="{:url('systemSetup/noticeManage')}" method="post">
+            <div class="form-group">
+                <label for="notice-title" class="col-xs-1 control-label">标题:</label>
+                <div class="col-xs-4">
+                    <input type="text" class="form-control" id="notice-title" placeholder="公告标题" name="noticeTitle">
+                </div>
+            </div>
+            <input type="hidden" name="noticeid" value="" id="hidenoticeid">
+            <div class="form-group ">
+                <label  class="col-xs-1 control-label">置顶:</label>
+                <div class="col-xs-4" style="margin-top:5px;" >
+                    <input type="radio" name="top" value="是" >是
+                    <input type="radio" name="top" value="否" >否
+                </div>
+            </div>
+            <strong style="margin-left:50px;">&nbsp;&nbsp;公告内容编辑:</strong>
+            <script id="container" name="content" type="text/plain" style="margin-left:60px;"></script>
+            <button type="button" class="btn btn-default" style="margin-top:20px;margin-left:50px;">提交</button>
+        </form>
+    </div>
+    <!--添加公告结束-->
+</div>
+{include file='public/footer'}
+<script>
+    var editor = UE.getEditor("container",{initialFrameWidth:800,initialFrameHeight:300,insertcode:false});
+    $(function(){
+        $("button:contains('添加新公告')").click(function(){
+            $("#tab-notice").css("display","none");
+            $("#notice-title").val('');
+            $("#hidenoticeid").val('');
+            editor.setContent('');
+            $("#add-notice").css("display","block");
+        });
+        $("button:contains('提交')").click(function(){
+            var title = $.trim($("#notice-title").val());
+            var content = editor.getContent();
+            if(!title ){
+                alert("标题不能为空~!");
+                return false;
+            }else if(!content){
+                alert("公告内容不能为空!");
+                return false;
+            }else{
+                $("form").submit();
+            }
+        });
+        $("button:contains('编辑公告')").click(function(){
+            var edit_flag=0,noticeid='';
+            $("input:checkbox").each(function(i,dom){
+                if($(dom).prop('checked')){
+                    edit_flag +=1;
+                    noticeid = $(dom).attr('noticeid');
+                }
+            });
+            if(edit_flag == 0){
+                alert('请选择一个公告进行编辑!');
+            }else if(edit_flag >1){
+                alert('只能选择一个公告进行编辑!');
+            }else if(edit_flag ==1){
+                $.ajax({
+                    url:"/public/admin/system_setup/editNotice",
+                    type:"POST",
+                    dataType:"JSON",
+                    data:{"id":noticeid},
+                    success:function(msg){
+                        $("#tab-notice").css("display","none");
+                        if(msg[0]['istop']=='是'){
+                            $("input:radio").each(function(i,dom){
+                                if($(dom).attr('value')=='是'){
+                                    $(dom).prop("checked",true);
+                                }
+                            });
+                        }else if(msg[0]['istop']=='否'){
+                            $("input:radio").each(function(i,dom){
+                                if($(dom).attr('value')=='否'){
+                                    $(dom).prop("checked",true);
+                                }
+                            });
+                        }
+                        $("#hidenoticeid").val(noticeid);
+                        $("#notice-title").val(msg[0]['title']);
+                        editor.setContent(msg[0]['content']);
+                        $("#add-notice").css("display","block");
+                    }
+                });
+            }
+        });
+        //隐藏公告
+        $("button:contains('隐藏公告')").click(function(){
+            var hide_flag=0,hide_id='',isshow='';
+            $("input:checkbox").each(function(i,dom){
+                if($(dom).prop('checked')){
+                    hide_flag +=1;
+                    hide_id = $(dom).attr('noticeid');
+                    isshow = $(dom).attr('isshow');
+                }
+            });
+            if(hide_flag==0){
+                alert('请选择一个公告进行操作!');
+            }else if(hide_flag >1 ){
+                alert('只能选择一个公告进行操作!');
+            }else if(hide_flag ==1){
+                if(isshow=='否'){
+                    alert("该公告已经被隐藏!");
+                    return false;
+                }else{
+                    if(window.confirm("确定要隐藏该公告吗?")){
+                        $.ajax({
+                            url:"/public/admin/system_setup/isshow",
+                            type:"POST",
+                            data:{"hideid":hide_id},
+                            success:function(msg){
+                                if(msg=='ok'){
+                                    $("button").each(function(i,dom){
+                                        if($(dom).attr('isshow')=='是' && $(dom).attr('noticeid')==hide_id){
+                                            $(dom).html("否");
+                                            $(dom).toggleClass("btn-danger");
+                                            $(dom).toggleClass("btn-success");
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }
+
+
+            }
+        });
+        //显示公告
+        $("button:contains('显示公告')").click(function(){
+            var show_flag = 0,show_id='',isshow='';
+            $("input:checkbox").each(function(i,dom){
+                if($(dom).prop('checked')){
+                    show_flag +=1;
+                    show_id=$(dom).attr('noticeid');
+                    isshow=$(dom).attr('isshow');
+                }
+            });
+            if(show_flag==0){
+                alert("请选择一个公告进行操作!");
+            }else if(show_flag>1){
+                alert("只能选择一个公告进行操作!");
+            }else if(show_flag==1){
+                if(isshow=='是'){
+                    alert('该公告已经是显示状态!');return false;
+                }else{
+                    $.ajax({
+                        url:"/public/admin/system_setup/isshow",
+                        type:"POST",
+                        data:{"showid":show_id},
+                        success:function(msg){
+                            if(msg=='ok'){
+                                $("button").each(function(i,dom){
+                                    if($(dom).attr('isshow')=='否' && $(dom).attr('noticeid')==show_id){
+                                        $(dom).html("是");
+                                        $(dom).toggleClass("btn-danger");
+                                        $(dom).toggleClass("btn-success");
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    });
+</script>

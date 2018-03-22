@@ -1,0 +1,95 @@
+{include file="public/header" /}
+{include file="public/left" /}
+
+<div class="right" >
+<!--    <div class="sky">
+        <div class="clouds_one"></div>
+        <div class="clouds_two"></div>
+        <div class="clouds_three"></div>
+    </div>  -->
+    <!--显示用户根据运单查询的信息-->
+    <div class="search-bill" >
+        <h4>提单信息</h3>
+        <table class="table table-hover">
+            <tr>
+                <th>用户ID</th>
+                <th>运单号</th>
+                <th>状态</th>
+                <th>物流轨迹</th>
+                <th>操作</th>
+            </tr>
+            {if !empty($searchInfo.airInfo)}
+            <tr>
+                <td>{$searchInfo.airInfo.userid}</td>
+                <td>{$searchInfo.airInfo.airid}</td>
+                <td>{$searchInfo.airInfo.status}</td>
+                <td id='air' class="logis">物流轨迹</td>
+                <td>支付</td>
+            </tr>
+            {/if}
+            {if !empty($searchInfo.oceanInfo)}
+            <tr>
+                <td>{$searchInfo.oceanInfo.userid}</td>
+                <td>{$searchInfo.oceanInfo.oceanid}</td>
+                <td>{$searchInfo.oceanInfo.status}</td>
+                <td id="ocean" class="logis">物流轨迹</td>
+                <td>支付</td>
+            </tr>
+            {/if}
+        </table>
+    </div>
+   <!--查看物流轨迹模态框-->    
+    <div class="modal fade" tabindex="-1" role="dialog" id="searchLogistc">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">物流轨迹</h4>
+          </div>
+          <div class="modal-body">
+            <div id="airNum" style="color:black;font-size:16px">
+                <div style='color:black;font-size:16px'>空运提单号:{$searchInfo.airInfo.airid}</div>
+                {volist name="$searchInfo.airLog" id="airlogs"}
+                <div>{$airlogs.modifytime} &nbsp;&nbsp;&nbsp;&nbsp; {$airlogs.airlog}</div>
+                {/volist}
+            </div>
+            <div id="oceanNum" style="color:black;font-size:16px">
+                <div style='color:black;font-size:16px'>海运提单号:{$searchInfo.oceanInfo.oceanid}</div>
+                {volist name="$searchInfo.oceanLog" id="oceanlogs"}
+                <div>{$oceanlogs.modifytime} &nbsp;&nbsp;&nbsp;&nbsp; {$oceanlogs.oceanlog}</div>
+                {/volist}
+            </div>            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>                   
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--模态框结束-->   
+ 
+</div>
+<div class="clear_float"></div>
+</div>
+{include file="public/footer"}
+<script>
+    $(function(){
+        $('.logis').click(function(event){
+            if($(event.target).attr('id') == 'air'){                
+                $('#oceanNum').css('display','none');
+                $('#airNum').css('display','block');
+                $('#searchLogistc').modal('show');
+            }else if($(event.target).attr('id')=='ocean') {
+                $('#airNum').css('display','none');
+                $('#oceanNum').css('display','block');
+                $('#searchLogistc').modal('show');
+            }
+            
+        });
+    });
+</script>
+
+
+
+
+

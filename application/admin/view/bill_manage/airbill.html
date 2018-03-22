@@ -1,0 +1,568 @@
+{include file="public/header"}
+
+<style>
+   #page {
+      float: left;
+      margin: 20px 0 10px 0;
+   }
+   #page a{
+        display: inline-block;
+        border: 1px solid  #A0A0A0;
+        margin-left: 5px;
+        width: 30px;
+        text-align: center;
+        text-decoration: none;
+        border-radius:2px;
+        color: #A0A0A0;
+    }
+   #page .prev{
+        width:50px;
+    }
+   #page .next{
+        width:50px;
+    }
+
+   #page p{
+        margin-left:5px;
+        display:inline-block;
+    }
+    #page .cur{
+        background: #077EE3;
+    }
+
+   #choseNum {
+      float: left;
+      margin: 18px 0 10px 10px;
+      display: inline-block;
+    }
+    
+   #pageNum {
+      width:35px;
+      margin:0 2px 0 5px;
+      border-radius: 5px;
+    }
+   #gotoPage {
+      width: 35px;
+      margin:0 5px 0 5px;
+      border-radius: 5px;
+    }
+   .check-airportbill {
+      color: blue;
+      cursor: pointer;
+   }
+
+   .search-wrap {   
+    position: relative;
+    height: 90px;
+    border-bottom: 0.5px solid silver;
+     background-color: white;
+   }
+   .search-div {
+      width: 490px;
+      margin: 0 auto;
+      color: white;
+      font-size: 16px;
+      line-height: 90px
+   }
+   .search-input {
+      width: 300px;
+      height: 45px;
+      display: inline-block;
+      border-radius: 5px;
+   }
+   .search-btn {
+       font-size: 18px;
+       margin-left: 15px;
+       width: 130px;
+       height: 45px;
+       color: blue;
+       background-color: #FFA042;
+   }
+
+</style>
+<div class="main">
+<!--空运提单管理页面-->
+   <div class="list-group" style="width:100%;height:25px;border-bottom:0.3px solid silver" >
+      <ul class="" id="navInfo">
+         <li><a href="#">首页</a>&raquo;</li>
+         <li><a href="#">提单管理</a>&raquo;</li>
+         <li><a href="#">空运提单</a><li>
+      </ul>
+   </div>
+   <div  class="form-group search-wrap">
+      <div class="search-div">
+         <input type="text" placeholder="输入提单号/用户ID查询"  class="form-control search-input" id="search">
+         <button class="btn btn-default form-control search-btn" >查询</button>
+      </div>
+   </div>
+   <div style="margin-left:30px">
+      <div class="btn-group" >
+         <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+          选择状态 <span class="caret"></span>
+         </button>
+         <ul class="dropdown-menu" id="choseStatus">
+            <li><a href="#">全部显示</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">待到港</a></li>            
+            <li role="separator" class="divider"></li>
+            <li><a href="#">已到港</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">已提货</a></li>
+            <li role="separator" class="divider"></li>
+             <li><a href="#">清关中</a></li>
+             <li role="separator" class="divider"></li>
+            <li><a href="#">已转单</a></li>             
+            <li role="separator" class="divider"></li>
+            <li><a href="#">已收货</a></li>   
+         </ul>
+      </div> 
+          <div class="btn-group" >
+         <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+          更改状态 <span class="caret"></span>
+         </button>
+         <ul class="dropdown-menu" id="changeStatus">
+            <li><a href="#">更改为待到港</a></li>            
+            <li role="separator" class="divider"></li>
+            <li><a href="#">更改为已到港</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">更改为已提货</a></li>            
+            <li role="separator" class="divider"></li>
+             <li><a href="#">更改为清关中</a></li>
+             <li role="separator" class="divider"></li>
+            <li><a href="#">更改为已收货</a></li>   
+         </ul>
+      </div>    
+      <button class="btn btn-default" id="koufei">扣费</button>
+      <button class="btn btn-default" id="exportExcel">导出表格</button>  
+   </div>
+   <div style="width:90%;margin-left:30px;">
+      <div class="btn-group" style="float:left;margin-top:13px;">         
+         <button id='selAll' class="btn btn-default">全选/反选</button>
+      </div>
+      {$list}
+      <div id="choseNum">
+         每页显示<input type="text" id="pageNum" value="{$value}">条
+         <button type="button" class="chose-btn" >设置</button>
+         &nbsp;&nbsp;转到<input type="text" id="gotoPage">页<button id='goto'>跳转</button>
+      </div>      
+      <table class="table table-hover" id="allAirport" >
+         <tr>
+            <th></th>
+            <th>ID</th>
+            <th>提单编号</th>
+            <th>用户id</th>
+            <th>用户名</th>         
+            <th>提交时间</th>
+            <th>总费用(RMB)</th>
+            <th>提单状态</th>
+            <th>余额</th>
+            <th>手机号码</th>
+         </tr>
+         {volist name="airInfo" id="info"}
+         <tr>
+            <td><input type="checkbox" name="" rid="{$info.rid}"  airid="{$info.airid}" userid="{$info.userid}"></td>
+            <td>{$info.rid}</td>
+            <td  class="check-airportbill" userid="{$info.userid}">{$info.airid}</td>
+            <td>{$info.userid}</td>
+            <td>{$info.relname}</td>            
+            <td >{$info.uploadtime}</td>
+            {if condition="$info.fee gt 0 "}
+            <td style="background-color:#FFA500 ;">{$info.fee}</td>
+            {else/}
+            <td style="background-color:#008000;">{$info.fee}</td>
+            {/if}
+            <td>{$info.status}</td>
+            {if condition="$info.balance<=0"}
+            <td style="background-color:#FFA500;">{$info.balance}</td>
+            {else/}
+            <td style="background-color:#008000;">{$info.balance}</td>
+            {/if}
+            <td>{$info.user_phone}</td>           
+          </tr>
+          {/volist}
+       </table>    
+    </div>
+    <!--查看物流轨迹模态框-->    
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" id="checkLogs">
+     <div class="modal-dialog" role="document">
+       <div class="modal-content modal-lg">
+         <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+           <h4 class="modal-title">操作历史记录</h4>
+         </div>
+         <div class="modal-body">
+           <div id="airNum" style="color:black;font-size:14px"></div>
+           <div></div>
+         </div>
+         <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>                  
+         </div>
+       </div>
+     </div>
+    </div>
+   <!--模态框结束-->   
+   <!--指定起始,结束行下载excel表格-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="exportExcelBy">
+     <div class="modal-dialog" role="document">
+       <div class="modal-content ">
+         <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+           <h4 class="modal-title" id="modaltitle"></h4>
+         </div>
+         <div class="modal-body">
+           起始行<input type="text" id="start" onkeyup="this.value=this.value.replace(/^(-\d+)|[a-zA-Z]+/g,'')"> 结束行<input type="text" id="end" onkeyup="this.value=this.value.replace(/^(-\d+)|[a-zA-Z]+/g,'')">
+           <button type="button" class="btn btn-default" id="downloadExcel">下载</button>
+         </div>
+         <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>              
+         </div>
+       </div>
+     </div>
+    </div>
+    <div  style="display:none">
+        <table class="table table-hover" id="exportExcelBySet" >
+        <tr>           
+            <th>ID</th>
+            <th>提单编号</th>
+            <th>用户id</th>
+            <th>用户名</th>         
+            <th>提交时间</th>
+            <th>总费用(RMB)</th>
+            <th>提单状态</th>
+            <th>余额</th>
+            <th>手机号码</th>           
+         </tr>
+         {volist name="airInfo1" id="info1"}
+         <tr>           
+            <td>{$info1.rid}</td>
+            <td  class="check-airportbill" userid="{$info1.userid}">{$info1.airid}</td>
+            <td>{$info1.userid}</td>
+            <td>{$info1.relname}</td>            
+            <td >{$info1.uploadtime}</td>
+            {if condition="$info1.fee gt 0"}
+            <td style="background-color:#FFA500;">{$info1.fee}</td>
+            {else/}
+            <td style="background-color:#008000;">{$info1.fee}</td>
+            {/if}
+            <td>{$info1.status}</td>
+            {if condition="$info1.balance<=0"}
+            <td style="background-color:#FFA500;">{$info1.balance}</td>
+            {else/}
+            <td style="background-color:#008000;">{$info1.balance}</td>
+            {/if}
+            <td>{$info1.user_phone}</td>           
+          </tr>
+         {/volist}
+      </table>
+    </div>
+    <!--指定起始,结束行下载excel表格-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="koufeiResult">
+     <div class="modal-dialog" role="document">
+       <div class="modal-content ">
+         <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+           <h4 class="modal-title" id="modaltitle">扣费信息</h4>
+         </div>
+         <div class="modal-body" >
+            <div id="koufeiInfo1">              
+            </div>
+            <div id="koufeiInfo">              
+            </div>
+         </div>
+         <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>                  
+         </div>
+       </div>
+     </div>
+    </div>
+</div>
+{include file="public/footer"}
+<script>   
+   $(function(){
+      //鼠标经过搜索框的时候,自动选中搜索框
+   /*    $('#search').mouseover(function(e){
+         e.target.select();
+       });*/
+      //点击设置每页显示多少条数据.
+      var pageNow = 1;  
+      $('.chose-btn').click(function(){
+        $('#page a').each(function(i){
+          if($(this).attr('class')=='cur'){
+            pageNow = $(this).html();
+          }           
+        });
+        var url = window.location.href;
+        var status = '';     
+        if(/\bstatus\b/.test(url)){
+          status = decodeURI(url.substr(url.lastIndexOf('=')+1)) ;                        
+        }else{
+          status = "全部显示";
+        }
+        var userid = 0;
+        if(/\buserid\b/.test(url)){
+          userid = url.substr(url.indexOf('userid')+7);          
+        }        
+        //console.log("/public/admin/bill_manage/index?pageNow=1&pageSize="+$('#pageNum').val()+"&value="+$('#pageNum').val()+"&status="+status);
+        window.location.href = "/public/admin/bill_manage/index?pageNow=1&pageSize="+$('#pageNum').val()+"&value="+$('#pageNum').val()+"&userid="+userid+"&status="+status;
+
+      });
+      //跳转到具体页 . 
+      $('#goto').click(function(){
+         var gotoPage = $.trim($('#gotoPage').val());
+         var total = parseInt($('#total').html());
+         var pattn = /^[1-9]+$/;
+         if(!gotoPage){
+            alert('跳转页不能为空^_^');
+            $('#gotoPage').val('');
+         }else if(!pattn.test(gotoPage)){
+            alert( "不是数字或格式不正确^_^");
+            $('#gotoPage').val('');
+         }else if( gotoPage > total){   
+            alert('没那么多页^_^');
+            $('#gotoPage').val('');
+         }else{
+            var url = window.location.href;
+            var status = '';     
+            if(/\bstatus\b/.test(url)){
+              status = decodeURI(url.substr(url.lastIndexOf('=')+1)) ;                        
+            }else{
+              status = "全部显示";
+            }
+            var userid = 0;
+            if(/\buserid\b/.test(url)){
+              userid = url.substr(url.indexOf('userid')+7);          
+            } 
+            window.location.href = "/public/admin/bill_manage/index?pageNow="+gotoPage+"&pageSize="+$('#pageNum').val()+"&value="+$('#pageNum').val()+"&userid="+userid+"&status="+status;
+         }
+      });
+      //全选      
+      $('#selAll').click(function(){
+         if($("input:checkbox").prop('checked')){
+            $("input:checkbox").prop('checked',false);
+         }else{
+            $("input:checkbox").prop('checked',true);
+         }
+      });
+      //根据状态显示
+      $('#choseStatus li').click(function(event){
+         var status = $(event.target).html();
+         if(status)
+         window.location.href = "/public/admin/bill_manage/index?status="+status;
+      });
+      //更改状态.  Ajax发送请求去后台更改状态,更改成功后,跳转到更改后的页面.
+      $("#changeStatus li").click(function(event){         
+            var checkedBill = {};
+            var flag =0;
+            var status;
+            $("input:checkbox").each(function(){
+               if($(this).prop('checked')){
+                  flag += 1;
+                  var rid = $(this).attr('rid');
+                  status = $(event.target).html().substr(3);                  
+                  checkedBill[rid] =  { "airid": $(this).attr("airid"), "userid": $(this).attr("userid"),"status":status};                   
+               }
+            });
+          
+            if(flag==0){
+               alert("请至少勾选一个运单!");
+               return false;
+            }                      
+            $.ajax({
+               url:"/public/admin/bill_manage/changeStatusByAjax",
+               type:"POST",              
+               data:{"choseBills":JSON.stringify(checkedBill)},
+               success:function(msg){                  
+                  if(msg==0){
+                     alert("修改状态失败!");
+                  }else if(msg==1){
+                     alert("修改状态成功!");
+                     //location.reload(true);刷新本页面
+                     window.location.href="/public/admin/bill_manage/index?status="+status;
+                  }
+               },
+               error:function(){
+                  alert("请求失败!");
+               }
+            });          
+         
+      });      
+      //给Date对象增加一个Format方法
+      Date.prototype.Format = function (fmt) { //author: meizz 
+         var o = {                    
+              "M+": this.getMonth() + 1, //月份 
+              "d+": this.getDate(), //日 
+              "h+": this.getHours(), //小时 
+              "m+": this.getMinutes(), //分 
+              "s+": this.getSeconds(), //秒 
+              "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+              "S": this.getMilliseconds() //毫秒 
+         };
+         if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+         for (var k in o)
+         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+         return fmt;
+      }
+      //点击提单号,查看操作历史.
+      $('.check-airportbill').click(function(event){
+         var airid = $(this).html();
+         var userid = $(this).attr('userid');
+         $.ajax({
+            url:"/public/admin/bill_manage/showLogs",
+            type:"POST",
+            data: {'airid':airid,'userid':userid},
+            dataType:"json",
+            success:function(msg){
+               if(msg == 0){
+                  alert("数据异常,请联系网站管理员!");
+               }else{
+                  var info = "<table class='table'><tr><th>操作时间</th><th>操作人</th><th>操作信息</th></tr>";
+                  for(var i=msg.length-1;i>=0;i--){
+                     var mdtime =msg[i]['modifytime']+'000'; 
+                     var time = new Date(parseInt(mdtime));  
+                     //console.log(Date.parse(new Date()));
+                     var logtime = time.Format('yyyy-MM-dd hh:mm:ss');                     
+                     info += "<tr><td>"+logtime+"</td><td>"+msg[i]['operator']+"</td><td>"+msg[i]['airlog']+"</td></tr>"; 
+                  }  
+                  info += "</table>";             
+                  $('#airNum').html(info); 
+               }
+            }
+         });
+         $('#checkLogs').modal('show');
+      });
+      //查询 处理
+      $('.search-btn').click(function(){
+        var searchInfo = $.trim($("#search").val());
+        var pattern = /^[1-9]+\d+$/;
+        if(!searchInfo){
+          alert("请输入查询内容!");
+        }else if(pattern.test(searchInfo)){
+          if(searchInfo.length != 5){
+            alert("输入的ID不存在!");
+          }else{
+            //根据ID查询
+            $.ajax({
+              url:"/public/admin/bill_manage/index",
+              type:"POST",
+              data:{"userid":searchInfo},            
+              success:function(msg){
+                if(msg == 0){
+                  alert("您输入的ID号不存在!");                  
+                }else{
+                  window.location.href="/public/admin/bill_manage/index?userid="+searchInfo;
+                }
+              }
+            });                                 
+          }
+        }else{
+          //根据提单号查询.
+          $.ajax({
+            url:"/public/admin/bill_manage/index",
+            type:"POST",
+            data:{'airid':searchInfo},
+            success:function(msg){
+              if(msg == 0){
+                alert("您输入的提单号不存在!");
+              }else{
+                window.location.href="/public/admin/bill_manage/index?airid="+searchInfo;
+              }
+            }
+          });
+          
+        }
+      });
+      $("#search").keyup(function(event){
+        if(event.which==13){
+          $(".search-btn").click();
+        }
+      });
+
+//导出数据到excel中
+      $("#exportExcel").click(function(){
+        //判断导出数据的行数.这是最大导出行数为1000.如果超过1000,让分开导出
+        var rows = $('#exportExcelBySet')[0].rows.length;
+        if(rows > 1000){
+          $('#modaltitle').html("数据共"+(rows-1)+"行.");
+          $('#exportExcelBy').modal('show');
+        }else{
+          //导出数据不能直接导页面上显示的table,页面上显示的数量有限. 要获取到当前用户需要导出的数据,传入一个隐藏的table然后导出
+          exportToExcel("exportExcelBySet","安心报关系统空运提单","sheet1"); //用的是引入的exportExcel.js中的方法.
+        }
+      });
+      //弹出模态框,用户选择好导出数据 起始结束行,点击下载后,用户输入的起始结束数字判断,然后ajax发送到后台获取对应行的数据
+      //PHP获取到数据后,将数据返回给Html表格,这个表格必须要隐藏起来.然后用exportToExcel()方法将表格里的内容下载到excel中.
+      $('#downloadExcel').click(function(){
+        var startRow = parseInt($('#start').val());
+        var endRow = parseInt($('#end').val());
+        if(!startRow || !endRow){
+          alert("请输入起始结束行!");         
+        }else if(startRow > endRow){
+          alert("起始行不能大于结束行!");
+          $('#start').val('');
+          $('#end').val('');
+        }else{
+          //首先要获取到当前用户选择的是什么状态的运单          
+            var url = window.location.href;
+            var status = decodeURI(url.substr(url.lastIndexOf('=')+1));
+            var userid = 0;
+            if(url.indexOf('userid')>0){
+              userid = url.substr(url.indexOf('userid')+7);
+            }
+            if(url.lastIndexOf("=")<0 || status =='全部显示'){
+              status = "全部显示";
+            }           
+         // exportToExcel("exportExcelBySet","安心报关系统","sheet1");
+        }
+      });
+      //扣费
+      $('#koufei').click(function(){
+        var checkedInfo = {};
+        var flag = 0;
+        $('#allAirport input:checkbox').each(function(event){
+            if($(this).prop('checked')){
+              flag += 1;
+             // var rid = $(this).attr('rid');
+              checkedInfo[flag] = {'airid':$(this).attr('airid'),'userid':$(this).attr('userid')};
+            }
+        });
+        if(flag == 0 ){
+          alert("请至少选择一个提单进行扣费!");
+        }else{          
+          $.ajax({
+            url:"/public/admin/bill_manage/deduction",
+            type:"POST",
+            dataType:'json',
+            data:{"checkedInfo":JSON.stringify(checkedInfo)},
+            success:function(msg){
+              //支付失败的提单:
+              var err = msg['err'];
+              var str = '';  
+               var errNum = 0;                       
+              if(err){
+                str = "<p>扣费失败提单信息</p><table class='table' ><tr><th>提单号</th><th>用户ID</th><th>扣费失败原因</th></tr>";                
+                for(var k in err){
+                  str +="<tr><td>"+err[k][0]+"</td><td>"+err[k][1]+"</td><td>余额不足</td></tr>";                  
+                  errNum+=1;
+                }
+                str += "</table>";  
+              }           
+                         
+              //支付成功的提单:
+              var suc = msg['suc'];
+              var sucNum = 0;             
+              if(suc){
+                for(var v in suc){                  
+                  sucNum +=1;
+                }
+              }
+              var str1 = "<p>扣费成功:"+sucNum+"单;扣费失败:"+errNum+"单</p>";   
+              $('#koufeiInfo').html(str);
+              $('#koufeiInfo1').html(str1);  
+              $('#koufeiResult').modal('show');   
+            }
+          });
+        }   
+      });
+  });
+
+</script>

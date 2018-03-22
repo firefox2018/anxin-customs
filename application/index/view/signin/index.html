@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>安心转运报关系统用户注册</title>
+    <meta name="viewport" content="width=device-width,user-scalable=no">
+    <script type="text/javascript" src="__PUBLIC__/static/index/js/jquery3.2.1.js"></script>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/static/index/css/css/bootstrap.min.css">
+    <script type="text/javascript" src="__PUBLIC__/static/index/js/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/static/index/css/index.css">
+    <link rel="stylesheet" type="text/css" href="__EXTEND__/upload_plugin/css/fileinput.css"  >
+    <script type="text/javascript" src="__EXTEND__/upload_plugin/js/fileinput.js"></script>
+    <script type="text/javascript" src="__EXTEND__/upload_plugin/js/locales/zh.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/static/index/js/index.js"></script>
+    <style>
+        label{
+            font-size:18px;font-family:华文楷体;margin-left:100px;
+        }
+        i{
+            color:red;margin-right:5px;
+        }
+        p{
+            margin-left:198px;
+            margin-top:5px;
+            color:#ADADAD;
+            font-size:12px;
+        }
+        span{
+            margin-left:10px;
+        }
+        .singin-header {
+            height: 100px;
+        }
+        .top_left {
+            margin-top: 20px;
+            margin-left: 500px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="singin-header">
+    <div class="pull-left" style="display:inline-block">
+        <a href="http://www.anxin-ex.com" target="_blank"><img src="__PUBLIC__/static/index/img/anxinlogo.jpg" style="width:240px;margin-top:20px;margin-left:20px"></a>
+        <div id="getTime" style="margin-left:50px"></div>
+    </div>
+    <div class="top_left" style="font-family:楷体;font-size:36px;color:black;display:inline-block;">安心报关系统注册</div>
+</div>
+<div style="width:100%;height:800px;background-color:#F9F9F9;">
+    <div style="width:850px;height:100%;background-color:#FFFFFF;margin:10px auto;">
+        <header style="font-size:18px;color:white;width:100%;height:38px;background-color:#6D9FD2;border-radius:3px;padding-left:10px;margin-bottom:20px;line-height:38px ">亲爱的用户您好,欢迎注册安心报关系统会员!带<i>*</i>为必填内容</header>
+        <form action="{:url('signin/sign')}" method="post" class="from-horisontal" id="signForm">
+            <div class="form-group" style="margin-bottom:20px">
+                &nbsp; &nbsp; &nbsp;<label for="user_name" class="control-label" ><i >*</i>用户名:</label>
+                <input type="text" name="user_name" id="user_name" style="display:inline-block;width:300px;margin-left:5px;" class="form-control"><span></span>
+                <p >可使用字母、数字、下划线，需以字母开头</p>
+            </div>
+            <div class="form-group" style="margin-bottom:20px">
+                &nbsp; &nbsp; &nbsp;<label for="user_email" class="control-label" ><i>*</i>邮&nbsp;&nbsp;&nbsp;&nbsp;箱:</label>
+                <input type="email" name="user_email" id="user_email" style="display:inline-block;width:300px;margin-left:5px" class="form-control"><span></span>
+                <p>建议最好使用QQ邮箱,忘记密码时可以使用邮箱找回</p>
+            </div>
+            <div class="form-group" style="margin-bottom:20px">
+                &nbsp; &nbsp; &nbsp;<label for="user_pwd" class="control-label" ><i >*</i>密&nbsp;&nbsp;&nbsp;&nbsp;码:</label>
+                <input type="password" name="user_pwd" id="user_pwd" style="display:inline-block;width:300px;margin-left:5px" class="form-control"><span></span>
+               <p> 6-16个字符,区分大小写</p>
+            </div>
+            <div class="form-group" style="margin-bottom:20px">
+                <label for="re_pwd" class="control-label"><i>*</i>重复密码:</label>
+                <input type="password" name="re_pwd" id="re_pwd" class="form-control" style="display:inline-block;width:300px;margin-left:5px"><span></span>
+                <p>请再次填写密码</p>
+            </div>
+            <div class="form-group" style="margin-bottom:20px">
+                <label for="relname" class="control-label"><i>*</i>真实姓名:</label>
+                <input type="text" name="relname" id="relname" class="form-control" style="display:inline-block;width:300px;margin-left:5px"><span></span>
+                <p>请填写真实姓名</p>
+            </div>
+            <div class="form-group" style="margin-bottom:20px">
+                <label for="user_phone" class="control-label"><i>*</i>手机号码:</label>
+                <input type="text" name="user_phone" id="user_phone" class="form-control" style="display:inline-block;width:300px;margin-left:5px"><span></span>
+                <p>请填写有效号码</p>
+            </div>
+            <div class="form-group" style="margin-bottom:20px">
+                &nbsp; &nbsp; &nbsp;<label for="captcha" class="control-label"><i>*</i>验证码:</label>
+                <input type="text" name="captcha" id="captcha" class="form-control" style="display:inline-block;width:220px;margin-left:5px;margin-right:5px;"><img src="{:url('signin/verify')}" title="点击刷新验证码" onclick="this.src='/public/index/signin/verify.html?'+Math.random();"/><span></span>
+            </div>
+            <p style="font-size:12px;margin-left:200px"><input type="checkbox" style="width:12px;height:12px" checked>同意<a href='#'>服务条款</a>和<a href="#">隐私权相关政策</a></p>
+           <button type="button" class="btn btn-primary" style="margin-left:195px;width:90px" id="register">提交注册</button>
+        </form>
+    </div>
+</div>
+<div class="bottom" >
+    CopyRight © 2017 [备案号] Powered By <a href="http://www.anxin-ex.com" target="_blank">http://www.anxin-ex.com</a>.
+</div>
+</body>
+</html>

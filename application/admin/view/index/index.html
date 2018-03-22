@@ -1,0 +1,178 @@
+{include file="public/header"}
+<style>
+    div.home-page {
+        height: 100%;
+        background-color: #eef5eb;
+        border-radius: 20px;
+        padding-top: 60px;
+        background: url('__PUBLIC__/static/admin/img/timg.jpg');
+
+
+    }
+    div.options {
+        width:200px;
+        height:200px;
+        margin-left: 80px;
+        border-radius: 10px;
+        background-color: rgba(106,114,128,0.5);
+        display: inline-block;
+        cursor: pointer;
+
+    }
+    .home-page p {
+        text-align: center;
+        margin-top: 40px;
+        font-family: 新宋体;
+        font-size: 25px;
+    }
+    .home-page span {
+        margin-left: 10px;
+        margin-top: 5px;
+        width: 30px;
+        height: 30px;
+        font-size: 18px;
+        border: 1px solid gray;
+        border-radius: 50%;
+        background: #f0f0f0;
+        display: block;
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>
+<div class="main">
+    <div class="list-group" style="width:100%;height:25px;border-bottom:0.3px solid silver;" >
+        <ul class="navInfo" id="navInfo">
+            <li><a href="#">首页</a></li>
+        </ul>
+    </div>
+    <div class="home-page">
+        <div class="options" name="1">
+            <span>1</span>
+            <p>到港</p>
+        </div>
+        <div class="options" name="2">
+            <span>2</span>
+            <p>提货 </p>
+        </div>
+        <div class="options" name="3">
+            <span>3</span>
+            <p>清关 </p>
+        </div>
+        <div class="options" name="4">
+            <span>4</span>
+            <p>转单</p>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="handle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title" id="handleLabel"></h3>
+            </div>
+            <div class="modal-body" id="handle-body">
+                <h4 id="handleBody"></h4>
+                <p id="handleHint" style="font-size:14px;color:#2fa0ec"></p>
+                <form  id="handleForm" enctype="multipart/form-data">
+                    <input type="file" style="display:inline-block;" id="file" name="file">
+                    <button type="button" class="btn btn-default" id="handleUpload">确定上传</button>
+                </form>
+                <h4 id="uploadResult"></h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="close-upload">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+{include file='public/footer'}
+<script>
+    $(function(){
+        $(".options").each(function(event){
+            $(this).click(function(){
+                var num = parseInt($(this).attr('name'));
+                switch(num){
+                    case 1 :
+                        $('#handleLabel').html('到港');
+                        $('#handleBody').html("提单到港上传示例表下载:<a href='__PUBLIC__/static/admin/img/demo.xlsx' target='_blank'><button type='button' class='btn btn-primary'>点击下载</button></a>");
+                        $('form').append("<input type='hidden' value='arrive' name='type'>");
+                        $('#handleHint').html("根据提单号在<a href='http://www.likecha.com' target='_blank'>立刻查</a>上查询已到港的提单,然后按照模板填写上传.");
+                        $('#handle').modal({backdrop:'static',show:true});
+                        break;
+                    case 2:
+                        $('#handleLabel').html('提货');
+                        $('#handleBody').html("已提货提单上传示例表下载:<a href='__PUBLIC__/static/admin/img/demo.xlsx' target='_blank'><button type='button' class='btn btn-primary'>点击下载</button></a>");
+                        $('form').append("<input type='hidden' value='delivery' name='type'>");
+                        $('#handleHint').html("整理出已提货提单,按照示例表填写好点击下面的浏览按钮选择,点击确定上传按钮上传!");
+                        $('#handle').modal({backdrop:'static',show:true});
+                        break;
+                    case 3:
+                        $('#handleLabel').html('清关');
+                        $('#handleBody').html("清关中提单上传示例表下载:<a href='__PUBLIC__/static/admin/img/demo.xlsx' target='_blank'><button type='button' class='btn btn-primary'>点击下载</button></a>");
+                        $('form').append("<input type='hidden' value='customs' name='type'>");
+                        $('#handleHint').html("整理出清关中提单,按照示例表填写好点击下面的浏览按钮选择,点击确定上传按钮上传!");
+                        $('#handle').modal({backdrop:'static',show:true});
+                        break;
+                    case 4:
+                        alert('跳转到提单管理界面,显示所有转单状态下的提单');
+                        break;
+                    default:
+                        break;
+                }
+            });
+        });
+        $("#handleUpload").click(function(){
+            $.ajax({
+                url:"{:url('index/receive')}",
+                type:"POST",
+                data:new FormData($('#handleForm')[0]),
+                cache: false,
+                processData: false,
+                contentType: false,
+                dataType:'JSON',
+                success:function(info){
+                    //console.log(info);
+                    var str = " <table class='table table-striped'> <tr><th>用户ID</th><th>提单号</th><th>错误原因</th></tr>";
+                    var len = -1;
+                    for(var i in info){
+                        len+=1;
+                        var accessInfo = info[i];
+                        if(accessInfo.userid){
+                           str += "<tr><td>"+accessInfo.userid+"</td><td>"+accessInfo.billNum+"</td><td>"+accessInfo.reason+"</td></tr>";
+                        }else{
+                            var sucNum = accessInfo.successNum;
+                        }
+                    }
+                    str += "</table>";
+                    $('#handle-body').append(str);
+                    $('#uploadResult').html('上传成功数量:'+ sucNum + ',&nbsp;&nbsp;上传失败数量:'+len);
+                }
+            });
+        });
+        //点击模态框右上角的 X 或者 点击 右下角的 关闭 按钮, 要清空上传的信息.
+        $(".close").click(function(){
+            if($("#file").val()){
+                $("#file").val('');
+            }
+            if($("#uploadResult").html()){
+                $("#uploadResult").html('');
+            }
+            if($(".table-striped")){
+                $(".table-striped").remove();
+            }
+        });
+        $("#close-upload").click(function(){
+            if($("#file").val()){
+                $("#file").val('');
+            }
+            if($("#uploadResult").html()){
+                $("#uploadResult").html('');
+            }
+            if($(".table-striped")){
+                $(".table-striped").remove();
+            }
+        });
+    });
+</script>
+

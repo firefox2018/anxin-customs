@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>安心转运报关系统用户密码修改</title>
+    <meta name="viewport" content="width=device-width,user-scalable=no">
+    <script type="text/javascript" src="__PUBLIC__/static/index/js/jquery3.2.1.js"></script>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/static/index/css/css/bootstrap.min.css">
+    <script type="text/javascript" src="__PUBLIC__/static/index/js/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/static/index/css/index.css">
+    <link rel="stylesheet" type="text/css" href="__EXTEND__/upload_plugin/css/fileinput.css"  >
+    <script type="text/javascript" src="__EXTEND__/upload_plugin/js/fileinput.js"></script>
+    <script type="text/javascript" src="__EXTEND__/upload_plugin/js/locales/zh.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/static/index/js/index.js"></script>
+    <style>
+        label{
+            font-size:18px;font-family:华文楷体;margin-left:100px;
+        }
+        i{
+            color:red;margin-right:5px;
+        }
+        p{
+            margin-left:198px;
+            margin-top:5px;
+            color:#ADADAD;
+            font-size:12px;
+        }
+        span{
+            margin-left:10px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="pull-left" style="display:inline-block">
+        <a href="http://www.anxin-ex.com" target="_blank"><img src="__PUBLIC__/static/index/img/anxinlogo.jpg" style="width:240px;margin-top:20px;margin-left:20px"></a>
+        <div id="getTime" style="margin-left:50px"></div>
+    </div>
+    <div class="top_left" style="font-family:楷体;font-size:36px;color:black;display:inline-block;margin-left:310px">安心转运报关系统用户密码修改</div>
+</div>
+<div style="width:100%;height:800px;background-color:#F9F9F9;">
+    <div style="width:850px;height:100%;background-color:#FFFFFF;margin:10px auto;">
+        <header style="font-size:18px;color:white;width:100%;height:38px;background-color:#6D9FD2;border-radius:3px;padding-left:10px;margin-bottom:20px;line-height:38px ">安心转运报关系统用户密码修改</header>
+        <form action="{:url('login/change')}" method="post" class="from-horisontal" id="changeP">
+            <div class="form-group" style="margin-bottom:20px">
+                &nbsp; &nbsp; &nbsp;<label for="user_pwd" class="control-label" ><i >*</i>新密码:</label>
+                <input type="password" name="user_pwd" id="user_pwd" style="display:inline-block;width:300px;margin-left:5px" class="form-control"><span></span>
+                <p> 6-16个字符,区分大小写</p>
+            </div>
+            <input type="hidden" name="id" value="{$id}">
+            <div class="form-group" style="margin-bottom:20px">
+                <label for="re_pwd" class="control-label"><i>*</i>重复密码:</label>
+                <input type="password" name="re_pwd" id="re_pwd" class="form-control" style="display:inline-block;width:300px;margin-left:5px"><span></span>
+                <p>请再次填写密码</p>
+            </div>
+            <button type="button" class="btn btn-primary" style="margin-left:195px;width:90px" id="chpwd">提交</button>
+        </form>
+    </div>
+</div>
+<div class="bottom" >
+    CopyRight © 2017 [备案号] Powered By <a href="http://www.anxin-ex.com" target="_blank">http://www.anxin-ex.com</a>.
+</div>
+</body>
+</html>

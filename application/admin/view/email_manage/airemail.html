@@ -1,0 +1,160 @@
+{include file='public/header'}
+<style>
+	#airport-email td,th{
+		text-align: center;
+	}
+	#page-airemail {
+		float: left;
+	}
+	#page-airemail p {
+        margin-left:5px;
+        display:inline-block;
+	}
+	#page-airemail a {
+        display: inline-block;
+        border: 1px solid  #A0A0A0;
+        margin-left: 5px;
+        width: 30px;
+        text-align: center;
+        text-decoration: none;
+        border-radius:2px;
+        color: #A0A0A0;
+	}
+	#page-airemail .prev {
+		width: 50px;
+	}
+	#page-airemail .next {
+		width: 50px;
+	}
+	#page-airemail .cur{
+        background: #077EE3;
+    }
+    #airport-email a {
+		color: blue;
+    }
+</style>
+<div class="main" style="overflow: scroll;">
+    <div class="list-group" style="width:100%;height:25px;border-bottom:0.3px solid silver" >
+        <ul class="" id="navInfo">
+            <li><a href="#">首页</a>&raquo;</li>
+            <li><a href="#">邮件管理</a>&raquo;</li>
+            <li><a href="#">空运提单</a><li>
+        </ul>
+    </div>
+	<div>
+		{$list}
+		<table class="table" id="airport-email">
+			<tr>				
+				<th>ID</th>
+				<th>用户ID</th>
+				<th>用户名</th>
+				<th>提单号</th>
+				<th>提单状态</th>				
+				<th>提单PDF</th>
+				<th>提单Excel</th>
+				<th>提交时间</th>
+				<th>异常</th>
+				<th>发送邮件至报关公司</th>
+				<th>发送异常邮件到客户</th>
+				<th>联系电话</th>
+			</tr>
+			{volist name="airportInfo" id="airInfo"}
+			<tr>		
+				<td>{$airInfo.rid}</td>
+				<td>{$airInfo.userid}</td>
+				<td>{$airInfo.relname}</td>
+				<td>{$airInfo.airid}</td>
+				<td>{$airInfo.status}</td>
+				<td><a href="{$airInfo.airpdf}">{$airInfo.userid}-{$airInfo.airid}-PDF</a></td>
+				<td><a href="{$airInfo.airexcel}">{$airInfo.userid}-{$airInfo.airid}-Excel</a></td>
+				<td>{$airInfo.uploadtime}</td>
+				{if condition="$airInfo.isException=='否'"}
+				<td><button type="button" class="btn btn-success" isnormal="normal" airid="{$airInfo.airid}" userid="{$airInfo.userid}" >{$airInfo.isException}</button></td>
+				{else /}
+				<td><button type="button" class="btn btn-danger">{$airInfo.isException}</button></td>
+				{/if}
+				{if condition="$airInfo.isSendToCustom==0"}
+				<td><button type="button" class="btn btn-default to-corporation" email="{$airInfo.user_email}" airpdf="{$airInfo.airpdf}" airexcel="{$airInfo.airexcel}" userId="{$airInfo.userid}" airid="{$airInfo.airid}" exception="{$airInfo.isException}">发邮件</button></td>
+				{else /}
+				<td><button type="button" class="btn btn-default btn-warning to-corporation"  disabled >已发送</button></td>
+				{/if}
+				{if condition="$airInfo.isSendToUser==0"}
+				<td><button type="button" class="btn btn-default to-user" useremail="{$airInfo.user_email}" airId="{$airInfo.airid}" userid="{$airInfo.userid}" >发邮件</button></td>
+				{else /}
+				<td><button type="button" class="btn btn-default to-user btn-warning" disabled>已发送</button></td>
+				{/if}
+				<td>{$airInfo.user_phone}</td>
+			</tr>
+			{/volist}		
+		</table>
+	</div>
+
+</div>
+{include file='public/footer'}
+<script>
+$(function(){
+	$('.to-corporation').click(function(event){
+	    if($(event.target).attr("exception")=='是'){
+			alert("该用户提单存在异常,请先通知客户处理!");
+			return false;
+		}else {
+            if (window.confirm("已检查完用户上传提单,确认无误请点击确定键继续发送邮件至报关公司!")) {
+                $.ajax({
+                    url: "{:url('email_manage/sendEmailToCustom')}",
+                    type: "POST",
+                    data: {
+                        "userid": $(event.target).attr('userid'),
+                        "airid": $(event.target).attr('airid'),
+                        "airpdf": $(event.target).attr('airpdf'),
+                        "airexcel": $(event.target).attr('airexcel')
+                    },
+                    success: function (msg) {
+                        if (msg == 'ok') {
+                            $('button').each(function (i, dom) {
+                                if ($(dom).attr('airid') == $(event.target).attr('airid') && $(dom).attr('userId') == $(event.target).attr('userId') && $(dom).attr('email') == $(event.target).attr('email')) {
+                                    $(dom).toggleClass('btn-warning');
+                                    dom.disabled = true;
+                                    $(dom).html('已发送');
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        }
+	});
+	$('.to-user').click(function(event){
+		if(window.confirm("上传提单信息存在异常,点击确定给用户发送邮件!")){
+			$.ajax({
+				url:"{:url('email_manage/sendEmailToUser')}",
+				type:'POST',
+				data:{"useremail":$(event.target).attr('useremail'),"airid":$(event.target).attr('airId'),"userid":$(event.target).attr('userid')},
+				success:function(msg){
+				    if(msg == "ok"){
+				        var flag = 0 ;
+						$('button').each(function(i,dom){
+						    if($(dom).attr('useremail')==$(event.target).attr('useremail') && $(dom).attr('airId') == $(event.target).attr('airId')){
+								$(dom).toggleClass('btn-warning');
+								$(dom).html('已发送');
+								dom.disabled = true;
+								flag +=1;
+								$('button').each(function(i,dom){
+                                    if(flag > 0){
+                                        if($(dom).attr('isnormal') =='normal' && $(dom).attr('userid')==$(event.target).attr('userid') && $(dom).attr('airid')==$(event.target).attr('airId')){
+                                            $(dom).toggleClass('btn-success');
+                                            $(dom).toggleClass('btn-danger');
+                                            $(dom).html('是');
+                                        }
+                                    }
+								});
+							}
+						});
+					}else{
+				        alert('发送邮件失败,请联系管理员!');
+					}
+				}
+			});
+		}
+	});
+});
+</script>

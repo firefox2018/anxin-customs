@@ -1,0 +1,144 @@
+{include file="public/header" /}
+<div id="carousel" class="carousel" >
+     <div id="carousel-img" class="carousel-img" style="left:0;">
+         <img src="__PUBLIC__/static/index/img/banner1.jpg" alt="" >
+         <img src="__PUBLIC__/static/index/img/banner2.jpg" alt="" >
+         <img src="__PUBLIC__/static/index/img/banner3.jpg" alt="" >
+     </div>
+     <div id="carousel-buttons" class="carousel-buttons">
+         <span index="0" class="on"></span>
+         <span index="1"></span>
+         <span index="2"></span>
+     </div>
+     <a href="#" class="arrow" id="carousel-prev">&lt;</a>
+     <a href="#" class="arrow" id="carousel-next">&gt;</a>
+</div>
+<div class="search">
+    <div class="col-xs-4 search-form">
+        <label for="inputPassword2" class="sr-only">Password</label>
+        <input type="text"  id="inputPassword2" style="height:30px;width:200px;border-radius: 5px;" placeholder="输入提单号查询">
+        <button type="submit" class="btn btn-default">搜索</button>
+    </div>
+</div>
+<div class="main">
+    <div class="procedure">
+        <ul class="procdure-ul">
+            <li>
+                <img src="__PUBLIC__/static/index/img/signin.jpg" alt="">
+                <p><b>1</b>&nbsp;<a href="{:url('signin/index')}">快速注册账号</a></p>
+            </li>
+            <li>
+                <img src="__PUBLIC__/static/index/img/upload.jpg" alt="">
+                <p><b>2</b>&nbsp;一键上传提单</p>
+            </li>
+            <li>
+                <img src="__PUBLIC__/static/index/img/submission.jpg" alt="">
+                <p><b>3</b>&nbsp;极速报关处理</p>
+            </li>
+            <li>
+                <img src="__PUBLIC__/static/index/img/dispatch.jpg" alt="">
+                <p><b>4</b>&nbsp;清关</p>
+            </li>
+            <li>
+                <img src="__PUBLIC__/static/index/img/dispatch.jpg" alt="">
+                <p><b>5</b>&nbsp;转发国内快递</p>
+            </li>
+        </ul>
+    </div>
+    <div class="main-bot">
+        <div class="notice">
+            <h3 style="color:#00FFFF;margin-left:10px">最新公告<small>发布网站最新公告</small><a href="/public/index/notice/notice" style="margin-left:80px;font-size:18px">More</a></h3>
+            <hr>
+            <div class="notice-content">
+                    {if condition="$res"}
+                    {volist name="res" id="notice"}
+                <div style="margin-left:15px;width:90%;height:25px;line-height:25px;border-bottom:0.6px solid #F7F6F8">
+                    <a href="/public/index/notice/notice?noticeid={$notice.id}">{$notice.title}</a>
+                </div>
+                    {/volist}
+                    {else /}
+                    <p>暂无数据</p>
+                    {/if}
+            </div>
+        </div>
+        <div class="relation">
+            <h3 style="color:#00FFFF;margin-left:10px;">联系我们<small>告知我们您的需求</small></h3>
+            <hr>
+            <div class="relation-content" >
+                <div style="margin-left: 20px;padding-top: 20px;">
+                    <h4 style="color:#C0C0C0">深圳市唐梦供应链有限公司</h4>
+                    <p>QQ交流群:</p>
+                    <p>服务电话:400-835-1191</p>
+                    <p>地址:广东省深圳市宝安区福永怀德南路</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/footer" /}
+<script>
+function animate(offset){
+//获取当前包裹图片部分的div距离左边的距离 left
+var currentLeft = parseInt($('#carousel-img').css('left'));
+//定义新的 left
+var newLeft = (currentLeft + offset) + 'px';
+if(currentLeft > 0){
+newLeft = -3800 + 'px';
+}else if(currentLeft < -3800){
+newLeft = 0 + 'px';
+}
+if(parseInt(newLeft) > 0){
+newLeft = -3800 + 'px';
+}else if (parseInt(newLeft) < -3800){
+newLeft = 0 + 'px';
+}
+$('#carousel-img').css('left',newLeft);
+// console.log("当前left:"+currentLeft);
+//让图片和小圆点对应起来. 首先清除之前小圆点的 on 属性
+for(var i = 0; i < $('#carousel-buttons span').length; i++){
+if($('#carousel-buttons span:eq('+i+')').attr('class') == 'on'){
+$('#carousel-buttons span:eq('+i+')').removeClass('on')
+}
+}
+var currentLeftIndex = parseInt($('#carousel-img').css('left'));
+var index = Math.abs(currentLeftIndex/1900);
+console.log("当前currentLeftIndex:"+currentLeftIndex);
+$('#carousel-buttons span:eq('+index+')').addClass('on');
+
+}
+$('#carousel-prev').click(function(){
+animate(1900);
+});
+$('#carousel-next').click(function(){
+animate(-1900);
+});
+//让图片自己动起来
+var timer ;
+function play(){
+timer = window.setInterval(function(){
+animate(-1900);
+},2500);
+}
+play();
+$('#carousel').mouseover(function(){
+window.clearInterval(timer);
+}).mouseout(function(){
+play();
+});
+//点击小圆点,显示对应的图片
+$('#carousel-buttons span').click(function(event){
+var index = $(event.target).attr('index');
+var newLeft = -index*1900 + 'px';
+for(var i = 0; i < $('#carousel-buttons span').length; i++){
+if( $('#carousel-buttons span:eq('+i+')').attr('class') == 'on'){
+$('#carousel-buttons span:eq('+i+')').removeClass('on');
+}
+}
+$('#carousel-buttons span:eq('+index+')').addClass('on');
+$('#carousel-img').css('left',newLeft);
+});
+</script>
+</body>
+</html>
+
+

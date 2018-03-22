@@ -1,0 +1,143 @@
+<!--头部开始-->
+{include file="public/header"}
+<!--头部结束-->
+<!--左侧开始-->
+{include file="public/left"}
+<!--左侧结束-->
+
+<!--右侧开始-->
+<div class="right">
+    <!--面包屑导航-->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="{:url('index/index/index')}"><i class="glyphicon glyphicon-home"></i>个人首页&raquo; </a>
+            <a href="#">物流轨迹&raquo; </a>
+            <a href="#">海运提单信息</a>
+        </div>
+        <div class="container kv-main">
+            <h3>海运提单物流信息</h3>
+
+        <div style="margin-bottom: 5px">
+            <span style="margin-right:5px;">选择状态:</span>
+            <select name="choseStatus" id="choseStatu" class="{$status}">
+                <option value="0">ALL</option>
+                <option value="1">待到港</option>
+                <option value="2">已到港</option>
+                <option value="3">已提货</option>
+                <option value="4">清关中</option>
+                <option value="5">已清关</option>
+                <option value="6">已转单</option>
+                <option value="7">已签收</option>
+            </select>
+            <button type="button" class="btn btn-default btn-xs" id="selectOceanport" style="margin-left:15px;">查询</button>
+        </div>
+           <!--  <div style="overflow:hidden;background-color:rgb(51,122,183);color:white;margin:5px 0px;width:100%" id="">
+               <div class="pull-left" style="text-align:center;margin-left:60px;width:60px">用户ID</div>
+               <div class="pull-left" style="text-align:center;margin-left:110px;width:100px">运单号</div>
+               <div class="pull-left" style="text-align:center;margin-left:90px;width:80px">状态</div>
+               <div class="pull-left" style="text-align:center;margin-left:80px;width:60px">是否异常</div>
+               <div class="pull-left" style="text-align:center;margin-left:80px;width:100px">物流轨迹</div>
+               <div class="pull-left" style="text-align:center;margin-left:160px;width:60px">操作</div>
+           </div> -->
+            <table class="table table-responsive table-hover mx-0 table-bordered" id="shipTable">
+                <tr>
+                    <th>用户ID</th>
+                    <th>运单号</th>
+                    <th>状态</th>
+                    <th>物流轨迹</th>
+                    <th>费用</th>
+                    <th>异常</th>
+                    <th>操作</th>
+                </tr>
+                {if condition="!empty($oceanInfo)"}
+                {volist name="oceanInfo" id="info"}
+                <tr>
+                    <td>{$info['userid']}</td>
+                    <td>{$info['oceanid']}</td>
+                    <td>{$info['status']}</td>
+                    <td name="{$info['oceanid']}" style="cursor:pointer;color:green">物流轨迹</td>
+                    <td>{$info['fee']}</td>
+                    {if condition="$info['isException']=='否'"}
+                    <td><button type="button" class="btn btn-success btn-sm">{$info['isException']}</button></td>
+                    {else/}
+                    <td><button type="button" class="btn btn-danger btn-sm">{$info['isException']}</button></td>
+                    {/if}
+                    <td><button type="button" class="btn btn-warning btn-sm">支付</button></td>
+                </tr>  
+                {/volist}
+                {else/}
+                <tr ><td colspan="7" style="color:#C0C0C0;font-size:20px">暂无数据!</td></tr>
+                {/if}              
+            </table>
+            {$list}
+         <!--查看物流轨迹模态框-->    
+            <div class="modal fade" tabindex="-1" role="dialog" id="logisticsModal">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">物流轨迹</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div id="shippingNum" style="color:black;font-size:16px"></div>
+                    <div></div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>                   
+                  </div>
+                </div>
+              </div>
+            </div>
+        <!--模态框结束-->        
+        </div>
+    </div>
+</div>
+<!--右侧结束-->
+<div class="clear_float"></div>
+</div>
+<!--底部开始-->
+{include file="public/footer"}
+
+<script>    
+//点击下拉框选中状态搜索,页面会跳转,让页面在跳转后,还是显示当前搜索的状态.
+    var statusArr = ['ALL','待到港','已到港','已提货','清关中','已清关','已转单','已签收'];
+    $('#selectOceanport').click(function(){        
+        var opt = $('#choseStatu').val();
+        if(opt){
+            var status = statusArr[opt];            
+            location.href="/public/index/logistic/shipping/status/"+status;
+        }
+    });
+    var oceancurStatus = $('#choseStatu').attr('class');
+    if(oceancurStatus){
+        var oceansubscript = statusArr.indexOf(oceancurStatus);        
+        $('#choseStatu option:eq('+oceansubscript+')').prop('selected',true);
+    }
+//搜索结束.
+
+$("#shipTable td:contains('物流轨迹')").click(function(event){   
+    var oceanid = $(event.target).attr('name');
+    if(oceanid){
+        $.ajax({
+            url:'/public/index/logistic/getOceanlog',
+            type:'POST',
+            dataType:'json',
+            data:{'oceanid':oceanid},
+            success:function(msg){
+                var info = "<div style='color:black;font-size:16px'>运单号:"+msg[0]['oceanid']+"&nbsp;&nbsp;&nbsp;&nbsp;当前状态:"+msg[0]['status']+"</div><hr/>";
+                    for(var i=msg.length-1;i>=0;i--){
+                        var mdtime =msg[i]['modifytime']+'000'; 
+                        var time = new Date(parseInt(mdtime));  
+                        //console.log(Date.parse(new Date()));
+                        var logtime = time.Format('yyyy-MM-dd hh:mm:ss');
+                        info += "<div>"+logtime+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+msg[i]['oceanlog']+"</div>";  
+                    }               
+                    $('#shippingNum').html(info);          
+            }
+        });
+        $('#logisticsModal').modal('show');
+    }
+});
+
+
+</script>

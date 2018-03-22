@@ -1,0 +1,86 @@
+<!--头部开始-->
+{include file="public/header" /}
+<!--头部结束-->
+<!--左侧开始-->
+{include file="public/left"}
+<!--左侧结束-->
+
+<!--右侧开始-->
+<div class="right">
+    <!--面包屑导航-->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="{:url('index/index/index')}"><i class="glyphicon glyphicon-home"></i>首页&raquo; </a>
+            <a href="#">用户管理&raquo; </a>
+            <a href="#">付款信息</a>
+        </div>
+        <div class="container kv-main">
+     <!--        <div class="opt">
+         <ul class="nav nav-pills pull-left" role="tablist" id="airportInfo" style="margin:0px 0px 5px 0px">
+             <li class="tab" style=""><a href="#" ><img src="">待付款<span class="badge">0</span></a></li>
+             <li class="tab" style=""><a href="#" ><img src="">已付款<span class="badge">0</span></a></li>
+             <li class="tab" style=""><a href="#" ><img src="">已签收<span class="badge">0</span></a></li>
+         </ul>
+     </div> -->
+        <!--     <div style="overflow:hidden;background-color:rgb(51,122,183);color:white;margin:5px 0px;width:100%" id="">
+            <div class="pull-left" style="text-align:center;margin-left:45px;width:90px"></div>
+            <div class="pull-left" style="text-align:center;margin-left:130px;width:150px">运单号</div>
+            <div class="pull-left" style="text-align:center;margin-left:130px;width:100px">状态</div>
+            <div class="pull-left" style="text-align:center;margin-left:75px;width:150px">费用(RMB)</div>
+            <div class="pull-left" style="text-align:center;margin-left:100px;width:100px">操作</div>
+        </div> -->
+        <div style="margin-top: 30px;margin-bottom: 10px;">
+            <span>选择状态:</span>
+            <select name="" id="">
+                <option value="">ALL</option>
+                <option value="">已付款</option>
+                <option value="">待付款</option>
+                <option value="">已签收</option>
+            </select>
+            <button type="button" class="btn btn-default btn-xs">查询</button>
+        </div>
+            <table class="table table-responsive table-hover mx-0 table-bordered" id="payTable">
+                <tr>
+                    <th>用户ID</th>
+                    <th>运单号</th>
+                    <th>状态</th>
+                    <th>费用(RMB)</th>
+                    <th>操作</th>
+                </tr>
+                <tr>
+                    <td>38031</td>
+                    <td>TEST32134213</td>
+                    <td>待付款</td>
+                    <td><a href="#">188</a></td>
+                    <td><a href="#">支付</a></td>
+                </tr>           
+            </table>
+            <!--分页开始-->
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li>
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li>
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!--分页结束-->
+        </div>
+    </div>
+</div>
+<!--右侧结束-->
+<div class="clear_float"></div>
+</div>
+<!--底部开始-->
+{include file="public/footer"}

@@ -1,0 +1,97 @@
+{include file="public/header"}
+{include file="public/left"}
+<div class="right">
+    <!--面包屑导航-->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="{:url('index/index/index')}"><i class="glyphicon glyphicon-home"></i>首页&raquo; </a>
+            <a href="{:url('Billmanage/getAirportbill')}">提单管理&raquo; </a>
+            <a href="#">修改提单</a>
+        </div>
+        <!--上传主体部分-->
+        <div class="container kv-main">
+            <h3 class="page-header">异常空运提单修改后重新上传<small>(带<i class="red" style="color:red;margin-right:5px">*</i>为必填内容.)&nbsp;&nbsp;&nbsp;空运提单查询网址:<a href="http://www.likecha.com" target="_blank">http://www.likecha.com</a></small></h3>
+            <form role="form" enctype="multipart/form-data" action="{:url('Billmanage/getChangeBill')}" method="post" id="chairport">
+                <div class="form-group">
+                    <span>空运提单号: <i class="red" style="color:red;margin-right:5px">*</i></span>
+                    <input type="text" name="airportNum" id="airportNum" style="color:#666;font-family:@微软雅黑;display:inline-block;width:170px;margin-right:10px" class="form-control" value="{$airid}" readonly="readonly"> <span style="color:#ADADAD">请仔细核对空运单号,以防误传!<span/>
+                </div>
+                <!--       <div class="form-group">
+                           <span>收货人地址: <i class="red" style="color:red;margin-right:5px">*</i></span>
+                           <select name="checkProvince" id="checkProvince" style="color:#666;font-family:@微软雅黑;display:inline-block;width:170px;margin-right:10px;" class="form-control">
+                               <option value="-1">请选择省市</option>
+                               <option value="77" data-area="77" data-parent="6">北京市</option>
+                               <option value="80" data-area="80" data-parent="6">天津市</option>
+                               <option value="436" data-area="436" data-parent="6">新疆维吾尔自治区</option>
+                           </select>
+                           城市: <input type="text" name="checkCity" id="checkCity" style="color:#666;font-family:@微软雅黑;display:inline-block;width:170px;margin-right:10px" class="form-control">
+                           区/县: <input type="text" name="checkCounty" id="checkCounty" style="color:#666;font-family:@微软雅黑;display:inline-block;width:170px;margin-right:10px" class="form-control">
+                       </div>
+                       <div class="form-group">
+                           <span>&nbsp;&nbsp;&nbsp;街道地址: <i class="red" style="color:red;margin-right:5px">*</i></span>
+                           <textarea name="Address" id="Address" style="width:400px;color:#666;display:inline-block;font-family:@微软雅黑;" placeholder="不要重复填写市区,不少于5个字,不多于120个字" class="form-control"></textarea>
+                       </div>-->
+                <div class="form-group" style="width:650px">
+                    上传空运提单: <i class="red" style="color:red;margin-right:5px">*</i>
+                    <a href="__PUBLIC__/static/index/img/airport.pdf" id="demo1">点击查看示例&nbsp;(空运提单示例,点击右上角&nbsp;<i class="glyphicon glyphicon-download-alt"></i>&nbsp;图标可下载示例,点击左上角&nbsp;<i class="glyphicon glyphicon-arrow-left"></i>返回原页面)</a>
+                    <input type="file" name="filename[]" id="airportFile" style="display:inline-block;width:180px">
+                </div>
+                <div class="form-group" style="width:650px;">
+                    上传货物清单: <i class="red" style="color:red;margin-right:5px">*</i>
+                    <a href="#" id="demo2">点击查看示例&nbsp;(点击下载提单表示例,按照示例表填写完后进行上传)</a>
+                    <input type="file" name="filename[]" id="goodsList" style="display:inline-block;width:180px">
+                </div>
+                <div class="form-group text-left">
+                    <button type="button" class="btn btn-primary" style="margin-top:20px" id="chairbtn">点击提交</button>
+                </div>
+            </form>
+            <!--开始显示excel预览下载模态框 -->
+            <div class="modal fade" tabindex="-1" role="dialog" id="modal2">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">货物清单excel表格示例与下载</h4>
+                        </div>
+                        <div class="modal-body">
+                            <a href="__PUBLIC__/static/index/img/airport.xlsx"><i class="glyphicon glyphicon-download-alt"></i>点击下载一个excel示例表</a>
+                            <div style="height:20px;width:100%"></div>
+                            <p><img src="__PUBLIC__/static/index/img/excel.png" style="width:580px;height:500px"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--显示excle模态框预览下载结束-->
+        </div>
+    </div>
+</div>
+</div>
+{include file="public/footer"}
+<script>
+    $(function(){
+        $('#chairbtn').click(function(){
+            var airportBill = $('#airportFile').val();
+            var goodsList = $('#goodsList').val();
+            if(!airportBill){
+                alert("空运提单不能为空!");
+                return false;
+            }
+            if(!goodsList){
+                alert("物品详情表不能为空!");
+                return false;
+            }
+            var suffix = airportBill.substr(airportBill.lastIndexOf('.')+1);
+            var suffix1 = goodsList.substr(goodsList.lastIndexOf('.')+1);
+            var suffix_excel = ['xlsx','xls','CSV'];
+            if(suffix != 'pdf' || suffix_excel.indexOf(suffix1)<0){
+                alert("上传文件格式不正确!");
+                return false;
+            }
+            $('#chairport').submit();
+        });
+    });
+
+</script>

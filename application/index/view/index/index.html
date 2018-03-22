@@ -1,0 +1,106 @@
+{include file="public/header" /}
+{include file="public/left" /}
+<div class="right" >
+   <!-- <div class="sky">
+        <div class="clouds_one"></div>
+        <div class="clouds_two"></div>
+        <div class="clouds_three"></div>
+    </div>-->
+    <div class="panel-heading">
+        <a href="{:url('index/index/index')}"><i class="glyphicon glyphicon-home"></i>个人首页&raquo; </a>
+    </div>
+    <div  class="form-group search-wrap">
+        <div class="search-d">
+            <input type="text" placeholder="你可以输入提单号查询"  class="form-control search-in">
+            <button class="btn btn-default form-control search-btn" >查询</button>
+        </div>
+    </div>
+    <div style="margin-left:40px;margin-top:20px;width:1200px;height:600px;border:0.5px solid gray;border-radius: 20px;" id="homepage">
+        <p style="font-size:22px;font-family:KaiTi;color:#2fa8ec;margin-top:20px;margin-left:10px;">基本信息</p>
+        <table class="table table-striped" style="width:100%;font-size:18px;margin-left:5px;font-family:KaiTi">
+            <tr><td></td><td>您好{$user_name?$user_name:''},欢迎登陆!</td></tr>
+            <tr><td></td><td>账户余额(&yen;):{$arr[7]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-warning">充值</button></td></tr>
+            <tr> <td></td><td>您的ID:{$arr[0]}</td></tr>
+            <tr><td></td><td>您的注册邮箱:{$arr[1]}</td></tr>
+
+        </table>
+        <hr>
+        <p style="font-size:22px;font-family:KaiTi;color:#2fa8ec;margin-top:20px;margin-left:10px;">提单概况</p>
+        <table class="table table-striped" style="width:100%;font-size:18px;margin-left:5px;font-family:KaiTi">
+            <tr> <td></td><td> 您当前共有{$arr[5]}个<a href="{:url('logistic/airport')}" title="点击可查看具体信息" style="color:#006AB1">空运提单</a>,{$arr[6]}个<a href="{:url('logistic/shipping')}" title="点击可查看具体信息" style="color:#006AB1">海运提单。</a></td></tr>
+            <tr><td></td><td>其中待支付的运单有{$arr[4]}单</td></tr>
+            <tr><td></td><td>需要支付的费用(&yen;):{$arr[3]}  &nbsp;&nbsp;&nbsp;{if condition='($arr[3] > 0)'}<button class="btn btn-warning">支付</button>{/if}</td></tr>
+        </table>
+
+    </div>
+    <!--显示用户根据运单查询的信息-->
+    <div class="search-bill"  style="width:80%;margin-left: 20px">
+    </div>
+    <!--显示用户必须验证邮箱的模态框-->
+    <div class="modal fade" id="{$modal_id}" tabindex="-1" role="modal" aria-labelledby="yanzhengyouxiangLabel" aria-hidden="false">
+        <div class="modal-dialog " style="background: none; border: 0px; box-shadow: 0 4px 16px rgba(0,0,0,0); webkit-box-shadow: 0 4px 16px rgba(0,0,0,0); moz-box-shadow: 0 4px 16px rgba(0,0,0,0);">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="yanzhengyouxiangLabel" style="font-size: 18px;">验证邮箱</h4>
+                </div>
+                <div class="modal-body">
+                    请先验证邮箱,验证完成后,刷新本页面即可。
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clear_float"></div>
+</div>
+{include file="public/footer"}
+<script>
+    $(function(){
+        var id = $('.modal').attr('id');
+        if(id == 'yanzhengyouxiang'){
+            $('#yanzhengyouxiang').modal({
+                backdrop: 'static',
+                show: true
+            })
+        }
+//根据提单号查询对应提单的情况.
+        $(".search-in").keydown(function(event){
+            if(event.which == 13){
+                $('.search-btn').click();
+            }
+        });   
+
+        $('.search-btn').click(function(){
+            var searchBillId = $.trim($('.search-in').val());           
+            var pattern =/[\u4e00-\u9faf]/;
+            if(!searchBillId){
+                alert("运单号不允许为空!");
+                return;
+            }else if(pattern.test(searchBillId)){
+                alert("运单号不能包含中文");
+                return ;
+            }else{
+                $.ajax({
+                    url:'/public/index/index/checkSearch',
+                    type:"POST",
+                    data:{'billId':searchBillId},
+                    success:function(msg){
+                        if(msg == 1){
+                            alert("该提单号不存在!");
+                            $('.search-in').val('');
+                            return false;
+                        }else{
+                            window.location.href="/public/index/index/showSearchInfo?billId="+searchBillId;                
+                        }
+                    }
+                });        
+            }
+        });
+
+
+    });
+</script>
+
+
+
+
+

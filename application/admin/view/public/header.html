@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>安心报关系统后台</title>
+    <script type="text/javascript" src="__PUBLIC__/static/admin/js/jquery3.2.1.js"></script>
+    <link rel="stylesheet" href="__PUBLIC__/static/admin/css/bootstrap.css">
+    <script src="__PUBLIC__/static/admin/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="__PUBLIC__/static/admin/css/w2ui-1.5.rc1.css">
+    <script src="__PUBLIC__/static/admin/js/w2ui-1.5.rc1.js"></script>
+    <link rel="stylesheet" href="__PUBLIC__/static/admin/css/index.css">
+    <script src="__PUBLIC__/static/admin/js/exportExcel.js"></script>    
+</head>
+<body>
+<div class="container-fluid">
+    <!--头部开始-->
+    <div class="header">
+        <div class="pull-left"><img src="__PUBLIC__/static/admin/img/anxinlogo.jpg" style="width:240px;padding-top:10px"></div>
+        <div class="title">
+            安心报关系统后台
+        </div>
+        <div class="login_info pull-right">
+            <ul class="login_info1">
+                <li>欢迎xxx登陆!</li>
+                <li><a href="#">退出</a></li>
+            </ul>
+        </div>
+    </div>
+    <!--头部结束-->
+    <!--导航部分开始-->
+    <div style="width:100%;height:50px;margin-top:6px;margin-bottom:6px;font-size:18px;background-color:#7FFFD4" role="navigation" >
+        <ul class="nav nav-pills " id="navTop">
+            <li role="presentation" ><a href="{:url('admin/index/index')}">首页</a></li>
+            <li role="presentation" class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    提单管理<span class="caret"> </span>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{:url('admin/BillManage/index')}" >空运提单</a></li>
+                        <li><a href="{:url('admin/BillManage/shipBill')}" >海运提单</a></li>
+                    </ul>
+                </a>
+            </li>
+            <li role="presentation" class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    邮件管理<span class="caret"></span>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{:url('admin/EmailManage/airemail')}" >空运提单</a></li>
+                        <li><a href="{:url('admin/EmailManage/oceanemail')}" >海运提单</a></li>
+                    </ul>
+                </a>
+            </li>
+            <li role="presentation" ><a href="{:url('admin/UserManage/index')}" >用户管理</a></li>
+            <li role="presentation" class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    系统设置<span class="caret"></span>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{:url('admin/SystemSetup/adminSetup')}" >管理员设置</a></li>
+                        <li><a href="{:url('admin/SystemSetup/sysSetup')}" >系统设置</a></li>
+                        <li><a href="{:url('admin/SystemSetup/noticeManage')}" >公告管理</a></li>
+                    </ul>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!--导航部分结束-->

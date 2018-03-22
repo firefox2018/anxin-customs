@@ -1,0 +1,179 @@
+
+{include file="public/header"}
+{include file="public/left"}
+<div class="right">
+    <!--面包屑导航-->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="{:url('index/index/index')}"><i class="glyphicon glyphicon-home"></i>个人首页&raquo; </a>
+            <a href="#">上传信息&raquo; </a>
+            <a href="#">海运提单上传</a>
+        </div>
+        <!--上传主体部分-->
+        <div class="container kv-main">
+            <h3 class="page-header">海运提单及货物清单上传<small>(带<i class="red" style="color:red;margin-right:5px">*</i>为必填内容)</small></h3>
+            <form role="form" enctype="multipart/form-data" action="{:url('upload/getShipping')}" method="post" id="shipForm">
+                <div class="form-group">
+                    <span>海运提单号: <i class="red" style="color:red;margin-right:5px">*</i></span>
+                    <input type="text" name="shippingNum" id="shippingNum" style="color:#666;font-family:@微软雅黑;display:inline-block;width:170px;margin-right:10px" class="form-control"><span id="shiptip"></span>
+                </div>
+                <div class="form-group">
+                    <span>商品总重量: <i class="red" style="color:red;margin-right:5px">*</i></span>
+                    <input type="text" name="shipgoodsWeight" id="shipgoodsWeight" style="color:#666;font-family:@微软雅黑;display:inline-block;width:170px;margin-right:10px" class="form-control" onkeyup="this.value=this.value.replace(/^(-\d+)|^0|[^\d]/,'')"> <span >(单位:kg,与原始发货文件重量误差±20Kg)</span>
+                    <p id="goodsWeight-ship-tip"></p>
+                </div>
+                <input type="hidden" name="userid" value="{$userid}" id="userid">
+                <div class="form-group" style="width:650px">
+                    上传海运提单: <i class="red" style="color:red;margin-right:5px">*</i>
+                    <a href="__PUBLIC__/static/index/img/airport.pdf" id="demo1-ship" style="color:blue" >点击查看示例&nbsp;(空运提单示例,点击右上角&nbsp;<i class="glyphicon glyphicon-download-alt"></i>&nbsp;图标可下载示例,点击左上角&nbsp;<i class="glyphicon glyphicon-arrow-left"></i>返回原页面)</a>
+                    <input type="file" name="filename[]" id="shipFile" style="display:inline-block;width:180px">
+                </div>
+                <div class="form-group" style="width:650px;">
+                    上传货物清单: <i class="red" style="color:red;margin-right:5px">*</i>
+                    <a href="#" id="demo2-ship" style="color:blue">点击查看示例&nbsp;(点击下载提单表示例,按照示例表填写完后进行上传)</a>
+                    <input type="file" name="filename[]" id="goodsList-ship" style="display:inline-block;width:180px">
+                </div>
+                <div class="form-group" style="width:650px;">
+                    上传原始发货清单: <i class="red" style="color:red;margin-right:5px">*</i>
+                    <a href="#" id="demo3-ship" style="color:blue">点击查看示例&nbsp;(点击下载提单表示例,按照示例表填写完后进行上传)</a>
+                    <input type="file" name="filename[]" id="originalgoodsList-ship" style="display:inline-block;width:180px">
+                </div>
+                <div class="form-group text-left">
+                    <button type="button" class="btn btn-primary" style="margin-top:20px" id="shipbtn">点击提交</button>
+                </div>
+            </form>
+            <!--开始显示货物清单excel预览下载模态框 -->
+            <div class="modal fade" tabindex="-1" role="dialog" id="modal2-ship">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">货物清单excel表格示例与下载</h4>
+                        </div>
+                        <div class="modal-body">
+                            <a href="__PUBLIC__/static/index/img/airport.xlsx" style="color:blue"><i class="glyphicon glyphicon-download-alt"></i>点击下载一个excel示例表</a>
+                            <div style="height:20px;width:100%"></div>
+                            <p><img src="__PUBLIC__/static/index/img/excel.png" style="width:580px;height:500px"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--显示货物清单excle模态框预览下载结束-->
+            <!--开始显示原始发货文件excel预览下载模态框 -->
+            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" id="modal3-ship">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">原始发货清单excel表格示例与模板下载</h4>
+                        </div>
+                        <div class="modal-body">
+                            <a href="__PUBLIC__/static/index/img/original.xls" style="color:blue"><i class="glyphicon glyphicon-download-alt"></i>点击下载一个excel示例表</a>
+                            <div style="height:20px;width:100%"></div>
+                            <p><img src="__PUBLIC__/static/index/img/original.png" style="width:850px;height:550px"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--显示原始发货文件excle模态框预览下载结束-->
+        </div>
+    </div>
+</div>
+</div>
+{include file="public/footer"}
+<script>
+/*判断用户输入的海运提单号格式,判断用户输入的海运提单号是否已经上传过*/
+$(function(){
+    $('#shippingNum').blur(function() {
+        var shippingNum = $.trim($('#shippingNum').val());
+        if (shippingNum) {
+            var pattern = /[\u4e00-\u9faf]/;
+            if (pattern.test(shippingNum)) {
+                $('#shiptip').html("<font color='red'>海运提单号中不能包含中文!</font>");
+                return false;
+            } else {
+                $('#shiptip').html('');
+            }
+            $.ajax({
+                url: '/public/index/upload/checkOceanid',
+                type: 'POST',
+                data: {"oceanid": shippingNum, "userid": $('#userid').val()},
+                success: function (msg) {
+                    if (msg == 1) {
+                        if (!window.confirm("该海运提单已经上传过,再次上传将覆盖原文件!")) {
+                            $('#shippingNum').val('');
+                        }
+                    }
+                }
+            });
+        } else {
+            $('#shiptip').html('');
+        }
+    });
+    //点击提交,开始对每一个输入内容进行判断
+    $('#shipbtn').click(function(){
+            //1.判断海运提单号是否包含中文,或是否为空
+             var shippingNum =$.trim($('#shippingNum').val());
+             if(!shippingNum){
+                alert("海运提单号不能为空!");
+                return false;
+             }else{
+                if($('#shiptip').html()){
+                    alert("海运提单号不能包含中文!");
+                    return false;
+                }
+             }
+             //2.判断用户提单重量是否输入
+            var shipgoodsWeight = $.trim($('#shipgoodsWeight').val());
+            if(!shipgoodsWeight){
+                alert("提单重量不能为空!");
+                $("#goodsWeight-ship-tip").html("<font color='red'>提单重量不允许为空!</font>");
+                return false;
+            }
+             //3.判断选择的上传文件格式.
+             var shippdf = $.trim($('#shipFile').val());            
+             if(!shippdf){
+                alert("请选择上传文件!");
+                return false;
+             }else{
+                var suffix = shippdf.substr(shippdf.lastIndexOf('.')+1);
+                if(suffix !== 'pdf'){
+                    alert("上传海运提单格式不正确,只支持pdf格式文件!");
+                    return false;
+                }
+             }
+             var shipexcel = $.trim($('#goodsList-ship').val());
+             if(!shipexcel){
+                alert("货物清单表不能为空!");
+                return false;
+             }else{
+                var suffix = shipexcel.substr(shipexcel.lastIndexOf('.')+1);
+                var suffix_excel = ['xlsx','xls','CSV'];
+                if(suffix_excel.indexOf(suffix)<0){
+                    alert("上传货物清单格式不正确,只支持xlsx,xls格式excel!");
+                    return false;
+                }
+             }
+            var originalexcel = $.trim($('#originalgoodsList-ship').val());
+            if(!originalexcel){
+                alert("原始发货清单表不能为空!");
+                return false;
+            }else{
+                var suffix1 = originalexcel.substr(originalexcel.lastIndexOf('.')+1);
+                var suffix_excel1 = ['xlsx','xls','CSV'];
+                if(suffix_excel1.indexOf(suffix1)<0){
+                    alert("上传原始发货文件格式不正确,只支持xlsx,xls格式excel!");
+                    return false;
+                }
+            }
+            $('#shipForm').submit();
+        });
+});
+</script>
+

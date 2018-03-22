@@ -1,0 +1,69 @@
+<!--头部开始-->
+{include file="public/header" /}
+<style>
+    #payTable a:link    {color:blue;}
+    #payTable a:visited {color:blue;}
+    #payTable a:hover   {color:red;}
+    #payTable a:active  {color:yellow;}
+</style>
+<!--头部结束-->
+<!--左侧开始-->
+{include file="public/left"}
+<!--左侧结束-->
+
+<!--右侧开始-->
+<div class="right">
+    <!--面包屑导航-->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="{:url('index/index/index')}"><i class="glyphicon glyphicon-home"></i>个人首页&raquo; </a>
+            <a href="#">提单管理</a>
+        </div>
+        <div class="container kv-main" style="margin-top:30px;">
+            <div style="overflow:hidden;background-color:rgb(51,122,183);color:white;margin:5px 0px;width:100%" id="">
+                <div class="pull-left" style="text-align:center;margin-left:40px;width:50px">运单ID</div>
+                <div class="pull-left" style="text-align:center;margin-left:100px;width:50px">运单号</div>
+                <div class="pull-left" style="text-align:center;margin-left:170px;width:60px">查看PDF</div>
+                <div class="pull-left" style="text-align:center;margin-left:150px;width:80px">查看EXCEL</div>
+                <div class="pull-left" style="text-align:center;margin-left:120px;width:100px">上传是否异常</div>
+                <div class="pull-left" style="text-align:center;margin-left:100px;width:40px">操作</div>
+            </div>
+            <table class="table table-responsive table-hover mx-0 table-bordered" id="payTable">
+                {volist name="airbill" id="vo"}
+                <tr>
+                    <td>{$vo.id}</td>
+                    <td>{$vo.airid}</td>
+                    <td><a href="{$vo.airpdf}" class="media" title="点击可以预览" >PDF</a></td>
+                    <td><a href="{$vo.airexcel}" title="点击可以下载" >EXCEL</a></td>
+                    <td>{$vo.isException}</td>
+                    <td><a href="{:url('billmanage/change',['airid'=>$vo.airid])}">修改</a></td>
+                </tr>
+                {/volist}
+
+            </table>
+            <!--分页开始-->
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li>
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li>
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!--分页结束-->
+        </div>
+    </div>
+</div>
+</div>
+{include file="public/footer"}

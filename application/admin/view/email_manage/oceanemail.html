@@ -1,0 +1,144 @@
+{include file='public/header'}
+<style>
+	#oceanport-email td,th {
+		text-align: center;
+	}
+	#page-oceanemail {
+		float: left;
+	}
+	#page-oceanemail p {
+		margin-left:5px;
+		display:inline-block;
+	}
+	#page-oceanemail a {
+		display: inline-block;
+		border: 1px solid  #A0A0A0;
+		margin-left: 5px;
+		width: 30px;
+		text-align: center;
+		text-decoration: none;
+		border-radius:2px;
+		color: #A0A0A0;
+	}
+	#page-oceanemail .prev {
+		width: 50px;
+	}
+	#page-oceanemail .next {
+		width: 50px;
+	}
+	#page-oceanemail .cur{
+		background: #077EE3;
+	}
+</style>
+<div class="main">
+    <div class="list-group" style="width:100%;height:25px;border-bottom:0.3px solid silver" >
+        <ul class="" id="navInfo">
+            <li><a href="#">首页</a>&raquo;</li>
+            <li><a href="#">邮件管理</a>&raquo;</li>
+            <li><a href="#">海运提单</a><li>
+        </ul>
+    </div>
+    	<div>
+			{$list}
+		<table class="table" id="oceanport-email">
+			<tr>
+				<th>ID</th>
+				<th>用户ID</th>
+				<th>用户名</th>
+				<th>提单号</th>
+				<th>提单状态</th>
+				<th>提单PDF</th>
+				<th>提单Excel</th>
+				<th>提交时间</th>
+				<th>异常</th>
+				<th>发送邮件至报关公司</th>
+				<th>发送异常邮件到客户</th>
+				<th>联系电话</th>
+			</tr>
+			{volist name="oceanportInfo" id="oceanInfo"}
+			<tr>		
+				<td>{$oceanInfo.rid}</td>
+				<td>{$oceanInfo.userid}</td>
+				<td>{$oceanInfo.relname}</td>
+				<td>{$oceanInfo.oceanid}</td>
+				<td>{$oceanInfo.status}</td>
+				<td><a href="{$oceanInfo.oceanpdf}">{$oceanInfo.userid}-{$oceanInfo.oceanid}-PDF</a></td>
+				<td><a href="{$oceanInfo.oceanexcel}">{$oceanInfo.userid}-{$oceanInfo.oceanid}-Excel</a></td>
+				<td>{$oceanInfo.uploadtime}</td>
+				{if condition="$oceanInfo.isException=='否'"}
+				<td><button type="button" class="btn btn-success" oceanisnormal="normal" oceanid="{$oceanInfo.oceanid}" userid="{$oceanInfo.userid}" >{$oceanInfo.isException}</button></td>
+				{else /}
+				<td><button type="button" class="btn btn-danger">{$oceanInfo.isException}</button></td>
+				{/if}
+				{if condition="$oceanInfo.isSendToCustom==0"}
+				<td><button type="button" class="btn btn-default oceanto-corporation" email="{$oceanInfo.user_email}" oceanpdf="{$oceanInfo.oceanpdf}" oceanexcel="{$oceanInfo.oceanexcel}" userId="{$oceanInfo.userid}" oceanId="{$oceanInfo.oceanid}">发邮件</button></td>
+				{else /}
+				<td><button type="button" class="btn btn-default btn-warning to-corporation"  disabled >已发送</button></td>
+				{/if}
+				{if condition="$oceanInfo.isSendToUser==0"}
+				<td><button type="button" class="btn btn-default oceanto-user" useremail="{$oceanInfo.user_email}" oceanid="{$oceanInfo.oceanid}" userid="{$oceanInfo.userid}" >发邮件</button></td>
+				{else /}
+				<td><button type="button" class="btn btn-default to-user btn-warning" disabled>已发送</button></td>
+				{/if}
+				<td>{$oceanInfo.user_phone}</td>
+			</tr>
+			{/volist}
+		</table>
+	</div>
+</div>
+{include file='public/footer'}
+<script>
+	$(function(){
+		$(".oceanto-corporation").click(function(event){
+		    if(window.confirm("已检查完用户上传提单,确认无误请点击确定键继续发送邮件至报关公司!")){
+				$.ajax({
+					url:"{:url('email_manage/oceanToCustom')}",
+					type:"POST",
+					data:{"userid":$(event.target).attr('userid'),"oceanid":$(event.target).attr('oceanid'),"oceanexcel":$(event.target).attr('oceanexcel'),"oceanpdf":$(event.target).attr('oceanpdf')},
+					success:function(msg){
+						if(msg=='ok'){
+						    $('button').each(function(i,dom){
+						        if($(dom).attr('userId') == $(event.target).attr('userId') && $(dom).attr('oceanId')==$(event.target).attr('oceanId') && $(dom).attr('email')==$(event.target).attr('email')){
+									$(dom).html('已发送');
+									$(dom).toggleClass('btn-warning');
+									dom.disabled = true;
+								}
+							});
+						}
+					}
+				});
+			}
+		});
+		$(".oceanto-user").click(function(event){
+		    if(window.confirm("上传提单信息存在异常,点击确定给用户发送邮件!")){
+				$.ajax({
+					url:"{:url('email_manage/oceanToUser')}",
+					type:"POST",
+					data:{"userid":$(event.target).attr('userid'),"useremail":$(event.target).attr('useremail'),"oceanid":$(event.target).attr('oceanid')},
+					success:function(msg){
+						if(msg == 'ok'){
+						    var flag = 0;
+						    $("button").each(function(i,dom){
+								if($(dom).attr('useremail') == $(event.target).attr('useremail') && $(dom).attr('userid')==$(event.target).attr('userid') && $(dom).attr('oceanid')==$(event.target).attr('oceanid')){
+									$(dom).html('已发送');
+									dom.disabled = true;
+									$(dom).toggleClass('btn-warning');
+									flag+=1;
+								}
+								if(flag > 0){
+								    $("button").each(function(i,dom){
+										if($(dom).attr('oceanisnormal')=='normal' && $(dom).attr('userid') == $(event.target).attr('userid') && $(dom).attr('oceanid')==$(event.target).attr('oceanid')){
+                                            $(dom).toggleClass('btn-success');
+                                            $(dom).toggleClass('btn-danger');
+                                            $(dom).html('是');
+										}
+									});
+								}
+							});
+						}
+					}
+				});
+			}
+		});
+	});
+</script>

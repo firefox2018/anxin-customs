@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+		<title>报关表系统</title>
+		<link rel="stylesheet" type="text/css" href="__PUBLIC__/static/index/css/css/bootstrap.min.css">
+		<script type="text/javascript" src="__PUBLIC__/static/index/js/jquery3.2.1.js"></script>
+		<script type="text/javascript" src="__PUBLIC__/static/index/js/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="__PUBLIC__/static/index/css/login.css">
+		<script type="text/javascript" src="__PUBLIC__/static/index/js/login.js" ></script>
+	</head>
+<body>
+	<div class="container" >		
+		<div id="loginModal" class="modal show">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">		        
+		        <h2 class="text-center text-primary">报关系统登陆</h2>
+		      </div>
+		      <div class="modal-body">
+		        <form  class="form col-md-12 center-block">
+		          <div class="form-group">
+		            <input type="text" class="form-control input-lg" placeholder="用户名或邮箱" name="user_name" id="username"><span id="userInfo" ></span>
+		          </div>
+		          <div class="form-group">
+		            <input type="password" class="form-control input-lg" placeholder="密码" name="user_pwd" id="userpwd"><span id="pwdInfo"></span>
+		          </div>
+		          <div class="form-group">
+		            <button class="btn btn-primary btn-lg btn-block">立刻登录</button>
+		            <span id="forgetPwd"><a href="#">忘记密码</a></span>
+		            <span><a href="{:url('signin/index')}" class="pull-right">注册</a></span>
+		          </div>
+		        </form>
+		      </div>
+		      <div class="modal-footer">		        
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</div>
+</body>
+</html>

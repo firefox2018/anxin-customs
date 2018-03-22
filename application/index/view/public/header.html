@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>安心转运报关系统</title>
+		<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0">
+		<script type="text/javascript" src="__PUBLIC__/static/index/js/jquery3.2.1.js"></script>
+		<link rel="stylesheet" type="text/css" href="__PUBLIC__/static/index/css/css/bootstrap.min.css">
+		<script type="text/javascript" src="__PUBLIC__/static/index/js/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="__PUBLIC__/static/index/css/index.css">
+		<link rel="stylesheet" type="text/css" href="__EXTEND__/upload_plugin/css/fileinput.css"  >
+	<!--	<link rel="stylesheet" type="text/css" href="__PUBLIC__/static/index/css/style.css"  >-->
+		<script type="text/javascript" src="__EXTEND__/upload_plugin/js/fileinput.js"></script>
+		<script type="text/javascript" src="__EXTEND__/upload_plugin/js/locales/zh.js"></script>
+		<script type="text/javascript" src="__PUBLIC__/static/index/js/index.js"></script>
+		<style>
+			.top_right .login_area .userpng {
+				width: 30px;
+				height: 30px;
+				margin: 0 auto;
+				margin-top: 30px;
+				background-image: url("__PUBLIC__/static/index/img/users.png");
+				background-size: 100% 100%;
+				cursor: pointer;
+			}
+			.top_right .login_area .userinfo {
+				height: 20px;
+				line-height: 20px;
+				text-align: center;
+				margin: 0 auto;
+				cursor: pointer;
+			}
+			.top_right .login_area .logout {
+				height: 25px;
+				line-height: 25px;
+				text-align: center;
+				margin: 0 auto;
+				display: none;
+			}
+			.top_right:hover .logout {
+				display: block;
+			}
+		</style>
+	</head>
+<body>	
+	<div class="header">
+		<div  style="display:inline-block">
+			<a href="http://www.anxin-ex.com" target="_blank"><img src="__PUBLIC__/static/index/img/logo2.jpg" style="width:160px;margin-left:260px;height:100px"></a>
+		</div>
+        <div class="top_right" style="color:black; display:inline-block; ">
+			<div class="login_area" >
+                {if condition="$user_name!=='' "}
+					<div class="userpng"></div>
+					<div class="userinfo">{$user_name}</div>
+					<div class="logout"><a href="{:url('login/logout')}"><button class="btn  btn-primary btn-xs">退出</button></a></div>
+                {else /}
+					<div style="margin-top:30px;"><a href="{:url('login/index')}">登陆</a><a href="{:url('signin/index')}"> | 注册</a></div>
+                {/if}
+			</div>
+		</div>
+	</div>
+    <div class="nav-head">
+        <ul class="tabs">
+            <li><a href="{:url('home/home')}">首页</a></li>
+            <li><a href="{:url('company/companyProfile')}">公司简介</a></li>
+            <li><a href="{:url('index/index')}">个人中心</a></li>
+            <li><a href="{:url('notice/notice')}">最新公告</a></li>
+            <li><a href="{:url('contact/contact')}">联系我们</a></li>
+        </ul>
+    </div>
+

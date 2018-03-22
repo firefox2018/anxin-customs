@@ -1,0 +1,110 @@
+{include file="public/header"}
+<style>
+    #page {
+        float: left;
+        margin: 20px 0 10px 0;
+    }
+    #page a{
+        display: inline-block;
+        border: 1px solid  #A0A0A0;
+        margin-left: 5px;
+        width: 30px;
+        text-align: center;
+        text-decoration: none;
+        border-radius:2px;
+        color: #A0A0A0;
+    }
+    #page .prev{
+        width:50px;
+    }
+    #page .next{
+        width:50px;
+    }
+
+    #page p{
+        margin-left:5px;
+        display:inline-block;
+    }
+    #page .cur{
+        background: #077EE3;
+    }
+    .news-content {
+        width: 100%;
+        overflow: atuo;
+    }
+    .notice {
+        font-size: 14px;
+        line-height: 40px;
+        cursor: pointer;
+        overflow: hidden;
+        width: 100%;
+        height:50px;
+        margin: 0 auto;
+        border-bottom: 0.6px dashed #5F5F5F;
+    }
+    .notice a {
+        float: left;
+    }
+    .notice  label{
+        float:right;
+    }
+</style>
+<div id="carousel" class="carousel" >
+    <div id="carousel-img" class="carousel-img" style="left:0;">
+        <img src="__PUBLIC__/static/index/img/banner1.jpg" alt="" >
+        <img src="__PUBLIC__/static/index/img/banner2.jpg" alt="" >
+        <img src="__PUBLIC__/static/index/img/banner3.jpg" alt="" >
+    </div>
+    <div id="carousel-buttons" class="carousel-buttons">
+        <span index="0" class="on"></span>
+        <span index="1"></span>
+        <span index="2"></span>
+    </div>
+    <a href="#" class="arrow" id="carousel-prev">&lt;</a>
+    <a href="#" class="arrow" id="carousel-next">&gt;</a>
+</div>
+<div style="width:1980px;height:800px;background-color:#E8E8E7;">
+    <div style="float:left;width: 240px; height:600px; margin-left:350px;margin-top:20px;background-color:#E8E8E7">
+        <div style="width:100%;height:240px;background-color:#FFFFFF;padding:0 5px 0 5px;">
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" ><a href="{:url('home/home')}">首页<small>/Home Page</small></a></li>
+                <li role="presentation"><a href="{:url('company/companyProfile')}">公司简介<small>/Company profile</small></a></li>
+                <li role="presentation"><a href="{:url('index/index')}">个人中心<small>/Personal center</small></a></li>
+                <li role="presentation"  class="active"><a href="{:url('notice/notice')}">最新公告<small>/Notice</small></a></li>
+                <li role="presentation"><a href="{:url('contact/contact')}">联系我们<small>/Contact us</small></a></li>
+            </ul>
+        </div>
+        <div style="width:100%;height:300px;margin-top:50px;background-color:#FFFFFF;padding:0 5px 0 5px;">
+            <img src="__PUBLIC__/static/index/img/contact.jpg" style="width:100%;height:100px;">
+            <p style="color:#C0C0C0">深圳市唐梦供应链有限公司</p>
+            <p style="color:red">联系人:李璐</p>
+            <p style="color:red">电话:15705966173</p>
+            <p style="color:red">服务电话:400-835-1191</p>
+            <p style="color:red">地址:广东省深圳市宝安区福永怀德南路</p>
+        </div>
+    </div>
+    <div style="float:left;width: 700px;height: 780px;margin-top:20px;margin-left:40px;background-color:#FFFFFF">
+        <div style="padding:15px 10px 0 10px;">
+            <strong style="float:left;font-size:18px;">最新公告</strong>
+            <p style="float:right;">当前位置:<a href="#">首页</a>>><a href="#">最新公告</a></p>
+            <hr>
+            <div class="news-content">
+                {if condition="$notice"}
+                    {volist name="notice" id="notices"}
+                    <div class="notice">
+                        <a href="/public/index/notice/notice?noticeid={$notices.id}">{$notices.title}</a><label style="color:red;">[{$notices.addtime}]</label>
+                    </div>
+                    {/volist}
+                {else/}
+                <div style="font-size:18px;text-align:center"><strong>{$res.title}</strong></div>
+                <div style="font-size:14px;text-align:right;color:red">发布时间:{$res.addtime}</div>
+                <div style="overflow-y:scroll;height:650px;">{$res.content}</div>
+                {/if}
+            </div>
+            {if condition="$list"}
+            {$list}
+            {/if}
+        </div>
+    </div>
+</div>
+{include file="public/footer"}

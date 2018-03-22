@@ -1,0 +1,518 @@
+{include file="public/header"}
+<style>
+    .search-btn-ship {
+        font-size: 18px;
+        margin-left: 15px;
+        width: 130px;
+        height: 45px;
+        color: blue;
+        background-color: #FFA042;
+    }
+    .search-wrap-ship {
+        background-clolor: white;
+        height: 90px;
+        position: relative;
+        border-bottom: 0.5px solid silver;
+    }
+    .search-div-ship {
+        width: 490px;
+        margin: 0 auto;
+        color: white;
+        font-size: 16px;
+        line-height: 90px
+    }
+    .search-input-ship {
+        width: 300px;
+        height: 45px;
+        display: inline-block;
+        border-radius: 5px;
+    }
+    #page-ship {
+        float: left;
+        margin: 20px 0 10px 0;
+    }
+    #page-ship p{
+        margin-left:5px;
+        display:inline-block;
+    }
+    #page-ship a{
+        display: inline-block;
+        border: 1px solid  #A0A0A0;
+        margin-left: 5px;
+        width: 30px;
+        text-align: center;
+        text-decoration: none;
+        border-radius:2px;
+        color: #A0A0A0;
+    }
+    #page-ship .prev{
+        width: 50px;
+    }
+    #page-ship .next{
+        width: 50px;
+    }
+    #page-ship .cur {
+        background: #077EE3;
+    }
+    #choseNum-ship {
+      float: left;
+      margin: 18px 0 10px 10px;
+      display: inline-block;
+    }
+    #choseNum-ship input {
+        width: 35px;
+      margin:0 5px 0 5px;
+      border-radius: 5px;
+    }
+    .check-ocbill {
+        color: blue;
+        cursor: pointer;
+    }
+</style>
+
+<div class="main">
+    <!--海运提单管理页面-->
+    <div class="list-group" style="width:100%;height:25px;border-bottom:0.3px solid silver" >
+        <ul class="" id="navInfo">
+            <li><a href="#">首页</a>&raquo;</li>
+            <li><a href="#">提单管理</a>&raquo;</li>
+            <li><a href="#">海运提单</a><li>
+        </ul>
+    </div>
+    <div style="" class="form-group search-wrap-ship">
+        <div  class="search-div-ship">
+            <input type="text" placeholder="输入提单号/用户ID查询" class="form-control search-input-ship">
+            <button class="btn btn-default form-control search-btn-ship"  >查询</button>
+        </div>
+    </div>
+   <div style="margin-left:30px">
+      <div class="btn-group" >
+         <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+          选择状态 <span class="caret"></span>
+         </button>
+         <ul class="dropdown-menu" id="choseStatus-ship">
+            <li><a href="#">全部显示</a></li>
+            <li role="separator" class="divider"></li>
+<!--            <li><a href="#">待付款</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">已付款</a></li>            
+            <li role="separator" class="divider"></li>-->
+            <li><a href="#">待到港</a></li>            
+            <li role="separator" class="divider"></li>
+            <li><a href="#">已到港</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">已提货</a></li>            
+            <li role="separator" class="divider"></li>
+             <li><a href="#">清关中</a></li>
+             <li role="separator" class="divider"></li>
+            <li><a href="#">已转单</a></li>             
+            <li role="separator" class="divider"></li>
+            <li><a href="#">已收货</a></li>   
+         </ul>
+      </div> 
+          <div class="btn-group" >
+         <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+          更改状态 <span class="caret"></span>
+         </button>
+         <ul class="dropdown-menu" id="changeStatus-ship">
+<!--            <li><a href="#">更改为待付款</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">更改为已付款</a></li>            
+            <li role="separator" class="divider"></li>-->
+            <li><a href="#">更改为待到港</a></li>            
+            <li role="separator" class="divider"></li>
+            <li><a href="#">更改为已到港</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">更改为已提货</a></li>            
+            <li role="separator" class="divider"></li>
+             <li><a href="#">更改为清关中</a></li>
+             <li role="separator" class="divider"></li>
+            <!--<li><a href="#">更改为已转单</a></li>
+            <li role="separator" class="divider"></li>-->
+            <li><a href="#">更改为已收货</a></li>   
+         </ul>
+      </div>    
+      <button class="btn btn-default" id="koufei-ship">扣费</button>
+      <button class="btn btn-default" id="exportExcel-ship">导出表格</button>  
+   </div>
+    <div style="width:90%;margin-left:30px">
+        <!--分页信息开始-->
+        <div style="float: left; margin-top: 13px;">
+            <button type="button" class="btn btn-default" id="selAll-ship">全选/反选</button>
+        </div>
+        {$list}
+        <div id="choseNum-ship">
+         每页显示<input type="text" id="pageNum-ship" value="{$value}">条
+         <button type="button" class="chose-btn-ship" >设置</button>
+         &nbsp;&nbsp;转到<input type="text" id="gotoPage-ship">页<button id='goto-ship'>跳转</button>
+      </div> 
+        <!--分页信息结束-->
+        <table class="table table-hover "  id="allOceanport">
+            <tr>
+                <th></th>
+                <th>ID</th>
+                <th>提单编号</th>
+                <th>用户id</th>
+                <th>用户名</th>                
+                <th>提交时间</th>
+                <th>费用(RMB)</th>
+                <th>提单状态</th>
+                <th>余额</th>
+                <th>手机号码</th>
+              
+            </tr>
+            {volist name="allOceanBill" id="ocbill"}
+            <tr>
+                <td><input type="checkbox" name="" oceanid="{$ocbill.oceanid}" userid="{$ocbill.userid}" rid="{$ocbill.rid}" ></td>
+                <td>{$ocbill.rid}</td>
+                <td class="check-ocbill" userid={$ocbill.userid}>{$ocbill.oceanid}</td>
+                <td>{$ocbill.userid}</td>
+                <td>{$ocbill.relname}</td>               
+                <td>{$ocbill.uploadtime}</td>
+                {if condition="$ocbill.fee gt 0 "}
+                <td style="background-color:#FFA500;">{$ocbill.fee}</td>
+                {else/}
+                <td style="background-color:#008000;">{$ocbill.fee}</td>
+                {/if}
+                <td>{$ocbill.status}</td>
+                {if condition="$ocbill.balance<=0"}
+                <td style="background-color:#FFA500;">{$ocbill.balance}</td>
+                {else/}
+                <td style="background-color:#008000;">{$ocbill.balance}</td>
+                {/if}
+                <td>{$ocbill.user_phone}</td>
+               
+            </tr>     
+            {/volist}
+        </table>
+    </div>
+<!--导出excel表-->
+    <div  style="display:none">
+        <table class="table table-hover" id="exportExcelBySet-ship" >
+        <tr>           
+            <th>ID</th>
+            <th>提单编号</th>
+            <th>用户id</th>
+            <th>用户名</th>         
+            <th>提交时间</th>
+            <th>费用(RMB)</th>
+            <th>提单状态</th>
+            <th>余额</th>
+            <th>手机号码</th>           
+         </tr>
+         {volist name="allOceanBill1" id="info1"}
+         <tr>           
+            <td>{$info1.rid}</td>
+            <td  class="check-airportbill" userid="{$info1.userid}">{$info1.oceanid}</td>
+            <td>{$info1.userid}</td>
+            <td>{$info1.relname}</td>            
+            <td >{$info1.uploadtime}</td>
+            {if condition="$info1.fee gt 0"}
+            <td style="background-color:#FFA500;">{$info1.fee}</td>
+            {else/}
+            <td style="background-color:#008000;">{$info1.fee}</td>
+            {/if}
+            <td>{$info1.status}</td>
+            {if condition="$info1.balance<=0"}
+            <td style="background-color:#FFA500;">{$info1.balance}</td>
+            {else/}
+            <td style="background-color:#008000;">{$info1.balance}</td>
+            {/if}
+            <td>{$info1.user_phone}</td>           
+          </tr>
+         {/volist}
+      </table>
+    </div>
+<!--导出excel表结束-->
+
+<!--查看物流轨迹模态框-->    
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" id="checkLogs-ship">
+     <div class="modal-dialog" role="document">
+       <div class="modal-content modal-lg">
+         <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+           <h4 class="modal-title">操作历史记录</h4>
+         </div>
+         <div class="modal-body">
+           <div id="oceanNum" style="color:black;font-size:14px"></div>
+           <div></div>
+         </div>
+         <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>                  
+         </div>
+       </div>
+     </div>
+    </div>
+   <!--模态框结束-->
+   <!--扣费提示信息模板-->
+       <div class="modal fade" tabindex="-1" role="dialog" id="koufeiResult-ship">
+     <div class="modal-dialog" role="document">
+       <div class="modal-content ">
+         <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+           <h4 class="modal-title" id="modaltitle-ship">扣费信息</h4>
+         </div>
+         <div class="modal-body" >
+            <div id="koufeiInfo1-ship">              
+            </div>
+            <div id="koufeiInfo-ship">              
+            </div>
+         </div>
+         <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>                  
+         </div>
+       </div>
+     </div>
+    </div>
+</div>
+{include file='public/footer'}
+<script>
+$(function(){
+    //全选/反选
+    $('#selAll-ship').click(function(){     
+        $('#allOceanport input:checkbox').each(function(){
+            if($(this).prop('checked')){
+                $(this).prop('checked',false);
+            }else{
+                $(this).prop('checked',true);
+            }
+        });    
+    });
+    //根据状态显示 
+    $('#choseStatus-ship li').click(function(event){
+        var status = $(event.target).html();        
+        if(status) window.location.href="/public/admin/bill_manage/shipBill?status="+status;
+    });
+    //更改状态
+    $('#changeStatus-ship li').click(function(){
+        var checkedBill = {};
+        var flag = 0;
+        var status;
+        $('#allOceanport input:checkbox').each(function(){
+            if($(this).prop('checked')){
+                flag +=1;
+                var rid = $(this).attr('rid');
+                status = $(event.target).html().substr(3);
+                checkedBill[rid] = {"oceanid":$(this).attr('oceanid'),"userid":$(this).attr('userid'),"status":status};
+            }
+        });      
+        if(flag == 0){
+            alert("请至少勾选一个运单!");
+            return;
+        }
+        $.ajax({
+            url:"/public/admin/bill_manage/changeStatus",
+            type:"POST",
+            data:{"checkedBills":JSON.stringify(checkedBill)},
+            success:function(msg){
+                if(msg==0){
+                    alert("修改状态失败!");
+                }else{
+                    alert("修改状态成功!");
+                    window.location.href="/public/admin/bill_manage/shipBill?status="+status;
+                }
+                
+            },
+            error:function(){
+                alert("请求失败!");
+            }
+        });
+    });
+    //设置每页显示多少数据
+    var pageNow = 1;
+    $('.chose-btn-ship').click(function(){
+        $('#page-ship a').each(function(){
+            if($(this).attr('class')=='cur') pageNow = $(this).html();
+        }); 
+        var url = window.location.href;
+        var status = '';
+        if(/\bstatus\b/.test(url)){
+            status = decodeURI(url.substr(url.lastIndexOf('=')+1));
+        }else{
+            status = "全部显示";
+        }
+        var userid = 0;
+        if(/\buserid\b/.test(url)){
+            userid = url.substr(url.indexOf('userid')+7);
+        }       
+        window.location.href="/public/admin/bill_manage/shipBill?pageNow=1&pageSize="+$('#pageNum-ship').val()+"&value="+$('#pageNum-ship').val()+"&userid="+userid+"&status="+status;
+    });
+    //跳转到具体页面
+    $('#goto-ship').click(function(){
+        var gotoPage = $.trim($('#gotoPage-ship').val());
+        var total = parseInt($('#total').html());
+        var pattn = /^[1-9]$/;
+        if(!gotoPage){
+            alert('跳转页不能为空^_^');
+            $('#gotoPage-ship').val('');
+         }else if(!pattn.test(gotoPage)){
+            alert( "不是数字或格式不正确^_^");
+            $('#gotoPage-ship').val('');
+         }else if( gotoPage > total){   
+            alert('没那么多页^_^');
+            $('#gotoPage-ship').val('');
+         }else{
+            var url = window.location.href;
+            var status = '';     
+            if(/\bstatus\b/.test(url)){
+              status = decodeURI(url.substr(url.lastIndexOf('=')+1)) ;                        
+            }else{
+              status = "全部显示";
+            }
+            var userid = 0;
+            if(/\buserid\b/.test(url)){
+              userid = url.substr(url.indexOf('userid')+7);          
+            } 
+            window.location.href = "/public/admin/bill_manage/shipBill?pageNow="+gotoPage+"&pageSize="+$('#pageNum-ship').val()+"&value="+$('#pageNum-ship').val()+"&userid="+userid+"&status="+status;
+         }
+
+    });
+
+         //给Date对象增加一个Format方法
+      Date.prototype.Format = function (fmt) { //author: meizz 
+         var o = {                    
+              "M+": this.getMonth() + 1, //月份 
+              "d+": this.getDate(), //日 
+              "h+": this.getHours(), //小时 
+              "m+": this.getMinutes(), //分 
+              "s+": this.getSeconds(), //秒 
+              "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+              "S": this.getMilliseconds() //毫秒 
+         };
+         if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+         for (var k in o)
+         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+         return fmt;
+      }
+      //点击提单号,查看提单操作历史.
+      $('.check-ocbill').click(function(event){
+        var oceanid = $(this).html();
+        var userid = $(this).attr('userid');
+        $.ajax({
+            url:"/public/admin/bill_manage/showoceanLogs",
+            type:"POST",
+            data:{"oceanid":oceanid,"userid":userid},
+            dataType:"json",
+            success:function(msg){
+                if(msg == 0){
+                    alert("数据异常,请联系网站管理员!");
+                }else{
+                    var info = "<table class='table'><tr><th>操作时间</th><th>操作人</th><th>操作信息</th></tr>";
+                    for(var i = msg.length-1;i>=0;i--){
+                        var mdtime = msg[i]['modifytime']+'000';
+                        var time = new Date(parseInt(mdtime));
+                        var logtime = time.Format('yyyy-MM-dd hh:mm:ss');
+                        info += "<tr><td>"+logtime+"</td><td>"+msg[i]['operator']+"</td><td>"+msg[i]['oceanlog']+"</td></tr>";
+                    }
+                    info+="</table>";
+                    $('#oceanNum').html(info);
+                }
+            }           
+        });
+        $('#checkLogs-ship').modal('show');
+    });
+//根据提单号或者用户ID搜索
+    $('.search-input-ship').keyup(function(event){
+        if(event.which==13){
+            $('.search-btn-ship').click();
+        }
+    });
+    $('.search-btn-ship').click(function(){
+        var searchInfo = $.trim($('.search-input-ship').val());
+        var pattn = /^[1-9]+\d+$/;
+        if(!searchInfo){
+            alert("请输入查询内容");
+        }else if(pattn.test(searchInfo)){
+            if(searchInfo.length!=5){
+                alert("输入的ID不存在!");
+            }else{
+                //根据userid查
+                $.ajax({
+                    url:"/public/admin/bill_manage/shipBill",
+                    type:"POST",
+                    data:{"userid":searchInfo},
+                    success:function(msg){
+                        if(msg==0){
+                            alert("您输入的ID不存在,或者没有上传过提单!");
+                        }else{
+                            window.location.href="/public/admin/bill_manage/shipBill?userid="+searchInfo;
+                        }
+                    }
+
+                });
+            }
+        }else{
+            //根据提单号查询
+            $.ajax({
+                url:"/public/admin/bill_manage/shipBill",
+                type:"POST",
+                data:{'oceanid':searchInfo},
+                success:function(msg){
+                    if(msg==0){
+                        alert("您输入的提单号不存在!");
+                    }else{
+                        window.location.href="/public/admin/bill_manage/shipBill?oceanid="+searchInfo;
+                    }
+                }
+            });
+        }
+    });
+    $("#koufei-ship").click(function(){
+        var checkedInfo = {};
+        var flag = 0;
+        $("#allOceanport input:checkbox").each(function(event){
+            if($(this).prop('checked')){
+                flag +=1;
+                checkedInfo[flag] = {"oceanid":$(this).attr('oceanid'),"userid":$(this).attr('userid')};
+            }
+        });
+        if(flag==0){
+            alert("请至少选择一个提单进行扣费!");
+        }else{
+            $.ajax({
+                url:"/public/admin/bill_manage/deduction_ship",
+                type:"POST",
+                dataType:"json",
+                data:{"checkedInfo":JSON.stringify(checkedInfo)},
+                success:function(msg){
+                    //支付失败的提单:
+                    var err = msg['err'];
+                    var str = '';  
+                    var errNum = 0;                       
+                    if(err){
+                        str = "<p>扣费失败提单信息</p><table class='table' ><tr><th>提单号</th><th>用户ID</th><th>扣费失败原因</th></tr>";                
+                        for(var k in err){
+                          str +="<tr><td>"+err[k][0]+"</td><td>"+err[k][1]+"</td><td>余额不足</td></tr>";                  
+                          errNum+=1;
+                        }
+                        str += "</table>";  
+                      }
+                                  //支付成功的提单:
+                        var suc = msg['suc'];
+                        var sucNum = 0;             
+                        if(suc){
+                          for(var v in suc){                  
+                            sucNum +=1;
+                          }
+                        }
+                        var str1 = "<p>扣费成功:"+sucNum+"单;扣费失败:"+errNum+"单</p>";   
+                        $('#koufeiInfo-ship').html(str);
+                        $('#koufeiInfo1-ship').html(str1);  
+                        $('#koufeiResult-ship').modal('show');        
+                }
+            });
+        }
+    });
+    //导出excle表
+    $("#exportExcel-ship").click(function(){
+        //导出行数大于1000行,就让分开导出.
+        var rows = $("#exportExcelBySet-ship")[0].rows.length;
+        if(rows>1000){
+            alert("建议分次导出!");
+        }else{
+            exportToExcel("exportExcelBySet-ship","安心报关系统海运提单","sheet1");
+        }
+
+    });
+});
+</script>

@@ -1,0 +1,545 @@
+{include file='public/header'}
+<style>
+    #navInfo li{
+        margin:0 3px;
+        float:left;
+    }
+    #navInfo li a{
+        color:blue;
+    }
+    table th,td{
+        text-align: center;
+    }
+</style>
+<div class="main">
+    <div class="list-group" style="width:100%;height:25px;border-bottom:0.3px solid silver" >
+        <ul class="" id="navInfo">
+            <li><a href="#">首页</a>&raquo;</li>
+            <li><a href="#">用户管理</a><li>
+        </ul>
+    </div>
+    <div style="margin-left:30px;" >
+        <div style="float:left;">
+            <button class="btn btn-default">充值</button>
+            <button class="btn btn-default">扣费</button>
+            <button class="btn btn-default">锁定用户</button>
+            <button class="btn btn-default">解除锁定</button>
+            <button class="btn btn-default">修改密码</button>
+            <button class="btn btn-default">跳过邮箱验证</button>
+        </div>
+        <div class="row" style="float:left;width:600px;margin-left:10px;" >
+            <div class="col-lg-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="用户id/用户名/真实姓名" id="search-content">
+                    <span class="input-group-btn">
+                         <button class="btn btn-default" type="button" id="search-user">搜索</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="margin-left:30px;width:90%;">
+        <table class="table table-hover">
+            <tr>
+                <th></th>
+                <th>ID</th>
+                <th>用户名</th>
+                <th>真实姓名</th>
+                <th>用户等级</th>
+                <th>余额</th>
+                <th>电话号码</th>
+                <th>消费</th>
+                <th>邮箱</th>
+                <th>是否锁定</th>
+                <th>是否激活</th>
+                <th>注册时间</th>
+            </tr>
+            {volist name="userInfo" id="users"}
+            <tr>
+                <td><input type="checkbox" name="{$users.id}" balance="{$users.balance}" locked="{$users.islocked}"></td>
+                <td>{$users.id}</td>
+                <td>{$users.user_name}</td>
+                <td>{$users.relname}</td>
+                <td>VIP1</td>
+                {if condition="$users.balance>0"}
+                <td style="background-color:#008000" userid="{$users.id}" balance="{$users.balance}" class="balance">{$users.balance}</td>
+                {else /}
+                <td style="background-color:#FFA500" userid="{$users.id}" balance="{$users.balance}" class="balance">{$users.balance}</td>
+                {/if}
+                <td>{$users.user_phone}</td>
+                {if condition="$users.amount>0"}
+                <td style="background-color:#008000">{$users.amount}</td>
+                {else /}
+                <td style="background-color:#FFA500">{$users.amount}</td>
+                {/if}
+                <td>{$users.user_email}</td>
+                {if condition="$users.islocked =='否' "}
+                <td><button type="button" class="btn btn-success" locked="否" userid="{$users.id}">{$users.islocked}</button></td>
+                {else /}
+                <td><button type="button" class="btn btn-danger" locked="是" userid="{$users.id}">{$users.islocked}</button></td>
+                {/if}
+                {if condition="$users.user_status==1"}
+                <td><button type="button" class="btn btn-success">是</button></td>
+                {else /}
+                <td><button type="button" class="btn btn-danger" status="否" userid="{$users.id}">否</button></td>
+                {/if}
+                <td>{$users.regtime}</td>
+            </tr>
+            {/volist}
+        </table>
+    </div>
+    <!--充值模态框-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="recharge">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">输入充值金额</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="sum" class="col-sm-2 control-label">金额:</label>
+                            <div class="col-sm-4">
+                                <input type="email" class="form-control" id="sum" placeholder="充值金额" onkeyup="this.value=this.value.replace(/^(-\d+)|[^\d+,\.]|^(\.)|^0\d+$/g,'')">
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="remarks" class="col-sm-2 control-label">备注:</label>
+                            <div class="col-sm-4">
+                                <input type="email" class="form-control" id="remarks" placeholder="备注">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="colse-recharge">关闭</button>
+                    <button type="button" class="btn btn-primary" id="btn-recharge">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--充值模态框结束-->
+    <!--扣费模态框-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="deduction">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">扣费</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="deduction-sum" class="col-sm-2 control-label">金额:</label>
+                            <div class="col-sm-4">
+                                <input type="email" class="form-control" id="deduction-sum" placeholder="扣费金额" onkeyup="this.value=this.value.replace(/^(-\d+)|[^\d+,\.]|^(\.)|^0\d+$/g,'')">
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="deduction-remarks" class="col-sm-2 control-label">备注:</label>
+                            <div class="col-sm-4">
+                                <input type="email" class="form-control" id="deduction-remarks" placeholder="备注">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="colse-deduction">关闭</button>
+                    <button type="button" class="btn btn-primary" id="btn-deduction">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--扣费模态框结束-->
+    <!--修改密码模态框-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="changepwd">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">修改密码</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="newpwd" class="col-sm-2 control-label">新密码:</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="newpwd" >
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="newpwd-remarks" class="col-sm-2 control-label">备&nbsp;&nbsp;&nbsp;&nbsp;注:</label>
+                            <div class="col-sm-4">
+                                <input type="email" class="form-control" id="newpwd-remarks" placeholder="备注">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="colse-chgpwd">关闭</button>
+                    <button type="button" class="btn btn-primary" id="btn-chgpwd">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--修改密码结束-->
+</div>
+{include file="public/footer"}
+<script>
+$(function(){
+    //搜索.
+    $("#search-content").keyup(function(event){
+        if(event.which == 13){
+            $("#search-user").click();
+        }
+    });
+    $("#search-user").click(function(){
+        var queryCondition = $.trim($("#search-content").val());
+        if(queryCondition){
+            $.ajax({
+                url:"{:url('user_manage/index')}",
+                type:"POST",
+                data:{"queryCondition":queryCondition},
+                success:function(msg){
+                    if(msg =="ok"){
+                        window.location.href = "/public/admin/user_manage/index?condition="+queryCondition;
+                    }else if(msg == "error"){
+                        alert("查询不到该用户!");
+                        $("#search-content").val('');
+                    }
+                }
+            });
+        }
+    });
+    //充值开始
+    var flag = 0,user_id='';
+    $("button:contains('充值')").click(function(){
+        flag = 0; user_id='';
+        $("input:checkbox").each(function(){
+            if($(this).prop('checked')==true){
+                flag +=1;
+                user_id = $(this).attr('name');
+            }
+        });
+        if(flag == 0 ){
+            alert("请选择一个用户进行操作!");
+            return false;
+        }else if(flag>1){
+            alert("只能选择一个用户进行操作!");
+            user_id = '';
+            flag = 0;
+            return false;
+        }else if(flag==1){
+            $("#recharge").modal({
+                "show":true,
+                "backdrop":"static"
+            });
+        }
+    });
+    $("#btn-recharge").click(function(){
+        //获取输入充值金额
+        var sum = $.trim($("#sum").val());
+        if (parseFloat(sum)) {
+            var pattern = /^(\d+)\.?\d+/;
+            sum = new Number(sum);
+            if (pattern.test(sum)) {
+                sum = sum.toFixed(2);
+                if (!parseFloat(sum)) {
+                    $("#sum+span").html("<font color='red'>输入金额无效,请重新输入!</font>");
+                    return false;
+                }
+            }
+            var remarks = $.trim($("#remarks").val()) ? $.trim($("#remarks").val()) : '';
+            $.ajax({
+                url: "/public/admin/user_manage/recharge",
+                type: "POST",
+                data: {"user_id": user_id, "sum": parseFloat(sum), "remarks": remarks},
+                success: function (msg) {
+                    if (msg == 'ok') {
+                        $("td").each(function (i, dom) {
+                            if ($(dom).attr('userid') == user_id) {
+                                var balance = parseFloat($(dom).html());
+                                sum = parseFloat(sum);
+                                var newbalance = (balance + sum).toFixed(2);
+                                $(dom).html(newbalance);
+                                $(dom).css({"background-color": "#008000"});
+                                $("#sum").val('');
+                                $("#remarks").val('');
+                                $("#sum+span").html('');
+                                $("#recharge").modal("hide");
+                            }
+                        });
+                    } else {
+                        $("#recharge").modal("hide");
+                        alert("系统错误,请联系管理员!");
+                    }
+                }
+            });
+        } else {
+            $("#sum+span").html("<font color='red'>请输入充值金额</font>");
+        }
+    });
+    //点击关闭,要清除输入框的值.
+    $("#colse-recharge").click(function(){
+        $("#sum").val('');
+        $("#remarks").val('');
+        $("#sum+span").html('');
+    });
+    //充值结束
+    //扣费开始
+    var deduction_flag = 0,userid = '',balance = 0;
+    $("button:contains('扣费')").click(function(){
+        deduction_flag = 0; userid = '';
+        $("input:checkbox").each(function(i,dom){
+            if($(dom).prop('checked')){
+                deduction_flag +=1;
+                userid = $(this).attr('name');
+                $("td").each(function(index,d){
+                    if($(d).attr('userid')==userid && $(d).attr('class')=='balance'){
+                        balance = parseFloat($(this).html());
+                    }
+                });
+            }
+        });
+        if(deduction_flag == 0){
+            alert("请选择一个用户进行操作!");
+            return false;
+        }else if(deduction_flag > 1){
+            alert("只能选择一个用户进行操作!");
+            return false;
+        }else if(deduction_flag == 1){
+            if(balance == 0){
+                alert("用户余额不足!");
+                return false;
+            }else{
+                $("#deduction").modal({
+                    "show":true,
+                    "backdrop":"static"
+                });
+            }
+
+        }
+    });
+    $("#btn-deduction").click(function(){
+        var deduction_sum = parseFloat($.trim($("#deduction-sum").val())).toFixed(2);
+        if(deduction_sum=parseFloat(deduction_sum)){
+            var deduction_remarks = $.trim($("#deduction-remarks").val());
+            $.ajax({
+                url:"/public/admin/user_manage/deduction",
+                type:"POST",
+                data:{"userid":userid,"deduction_sum":deduction_sum,"deductionremarks":deduction_remarks},
+                success:function(msg){
+                    if(msg == 'ok'){
+                        var newbalance = parseFloat((balance -  deduction_sum).toFixed(2));
+                        $("#deduction-sum").val('');
+                        $("#deduction-remarks").val('');
+                        $("#deduction-sum+span").html('');
+                        $("#deduction").modal('hide');
+                        if(newbalance==0){
+                            $("td").each(function(i,dom){
+                                if($(dom).attr('userid')==userid && $(dom).attr('class')=='balance'){
+                                    $(dom).html('0.00');
+                                    $(dom).css({"background-color":"#FFA500"});
+                                }
+                            });
+                        }else{
+                            $("td").each(function(i,dom){
+                                if($(dom).attr('userid')==userid && $(dom).attr('class')=='balance'){
+                                    $(dom).html(newbalance);
+                                    $(dom).css({"background-color":"#008000"});
+                                }
+                            });
+                        }
+                    }else if(msg=='error'){
+                        alert("系统错误!");
+                        return false;
+                    }else{
+                        alert(msg);
+                        return false;
+                    }
+                }
+            });
+        }else{
+            $("#deduction-sum+span").html("<font color='red'>请输入有效的扣除金额!</font>");
+        }
+    });
+    $("#colse-deduction").click(function(){
+        $("#deduction-sum").val('');
+        $("#deduction-remarks").val('');
+        $("#deduction-sum+span").html('');
+    });
+    //扣费结束
+    //锁定用户
+    var lock_flag = 0,lock_userid = '';
+    $("button:contains('锁定用户')").click(function(){
+        lock_flag = 0;
+        $("input:checkbox").each(function(i,dom){
+            if($(dom).prop('checked')){
+                lock_flag+=1;
+                lock_userid = $(dom).attr('name');
+            }
+        });
+        if(lock_flag==0){
+            alert("请选择一个用户进行操作!");
+            return false;
+        }else if(lock_flag >1){
+            alert("只能选择一个用户进行操作!");
+            return false;
+        }else if(lock_flag==1){
+            if(window.confirm("确定要锁定该用户吗?")){
+                $.ajax({
+                    url:"/public/admin/user_manage/lockUser",
+                    type:"POST",
+                    data:{"userid":lock_userid},
+                    success:function(msg){
+                        if(msg == 'ok'){
+                            $("button").each(function(i,dom){
+                                if($(dom).attr('locked') =='否' && $(dom).attr('userid')==lock_userid){
+                                    $(dom).toggleClass("btn-success");
+                                    $(dom).toggleClass("btn-danger");
+                                    $(dom).html("是");
+                                }
+                            });
+                        }else if(msg =='error'){
+                            alert('系统错误');
+                        }
+                    }
+                });
+            }
+        }
+    });
+    //锁定用户结束
+    //解除锁定用户
+    var relieve_flag=0,relieve_userid='';
+    $("button:contains('解除锁定')").click(function(){
+        relieve_flag=0;relieve_userid='';
+        $("input:checkbox").each(function(i,dom){
+            if($(dom).prop('checked')){
+                relieve_flag+=1;
+                relieve_userid = $(dom).attr('name');
+                locked = $(dom).attr('locked');
+            }
+        });
+        if( relieve_flag==0){
+            alert("请选择一个用户进行操作!");return false;
+        }else if(relieve_flag>1){
+            alert("只能选择一个用户进行操作");return false;
+        }else if(relieve_flag==1){
+            $.ajax({
+                url:"/public/admin/user_manage/relieve",
+                type:"POST",
+                data:{"userid":relieve_userid},
+                success:function(msg){
+                    if(msg=='ok'){
+                        $("button").each(function(i,dom){
+                            if($(dom).attr('locked')== locked && $(dom).attr('userid')== relieve_userid ){
+                                $(dom).html("否");
+                                $(dom).toggleClass("btn-danger");
+                                $(dom).toggleClass("btn-success");
+                                alert("解除锁定成功!");
+                            }
+                        });
+                    }else{
+                        alert("系统错误!");
+                    }
+                }
+            });
+        }
+    });
+    //解除锁定用户
+    //修改用户密码
+    var chg_flag = 0,chg_userid ='';
+    $("button:contains('修改密码')").click(function(){
+        chg_flag = 0; chg_userid = '';
+        $("input:checkbox").each(function(i,dom){
+            if($(dom).prop('checked')){
+                chg_flag +=1;
+                chg_userid = $(dom).attr('name');
+            }
+        });
+        if(chg_flag == 0 ){
+            alert("请选择一个用户进行操作!");
+            return false;
+        }else if(chg_flag == 1) {
+            $("#changepwd").modal({
+                "show":true,
+                "backdrop":"static"
+            });
+        }else if(chg_flag >1){
+            alert("只能选择一个用户进行操作!");
+            return false;
+        }
+    });
+    $("#btn-chgpwd").click(function(){
+        var newpwd = $.trim($("#newpwd").val());
+        var newpwd_remarks = $.trim($("#newpwd-remarks").val()) ? $.trim($("#newpwd-remarks").val()):'';
+        if (!newpwd) {
+            $("#newpwd +span").html("<font color='red'>新密码不能为空!</font>");
+            return false;
+        } else {
+            $("#newpwd").val('');
+            $("#newpwd-remarks").val('');
+            $("#newpwd+span").html('');
+            $("#changepwd").modal('hide');
+            $.ajax({
+                url: "/public/admin/user_manage/changePwd",
+                type: "POST",
+                data: {"userid": chg_userid,"newpwd":newpwd,"newpwd_remarks":newpwd_remarks},
+                success: function (msg) {
+                    if(msg=='ok'){
+                        alert("修改成功!");
+                    }else{
+                        alert("系统错误!");
+                    }
+                }
+            });
+        }
+    });
+    $("#colse-chgpwd").click(function(){
+        $("#newpwd").val('');
+        $("#newpwd-remarks").val('');
+        $("#newpwd+span").html('');
+    });
+    //修改密码结束
+    //跳过邮箱验证
+    var skip_flag = 0,skip_userid ='';
+    $("button:contains('跳过邮箱验证')").click(function(){
+        skip_flag=0; skip_userid='';
+        $("input:checkbox").each(function(i,dom){
+            if($(dom).prop('checked')){
+                skip_flag +=1;
+                skip_userid = $(dom).attr('name');
+            }
+        });
+        if(skip_flag==0){
+            alert("请选择一个用户进行操作!");
+        }else if(skip_flag>1){
+            alert("只能选择一个用户进行操作!");
+        }else if(skip_flag==1){
+            $.ajax({
+                url:"/public/admin/user_manage/skipVerify",
+                type:"POST",
+                data:{"userid":skip_userid},
+                success:function(msg){
+                    if(msg=='ok'){
+                        $("button").each(function(i,dom){
+                            if($(dom).attr('userid')==skip_userid && $(dom).attr("status")=='否'){
+                                $(dom).html("是");
+                                $(dom).toggleClass("btn-danger");
+                                $(dom).toggleClass("btn-success");
+                                alert("跳过验证成功!");
+                            }
+                        });
+                    }else{
+                        alert("系统错误!");
+                    }
+                }
+            });
+        }
+    });
+});
+</script>

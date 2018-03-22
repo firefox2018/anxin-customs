@@ -1,0 +1,29 @@
+
+{include file="public/header"}
+{include file="public/left"}
+<div class="right">
+    <!--面包屑导航-->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="{:url('index/index/index')}"><i class="glyphicon glyphicon-home"></i>首页&raquo; </a>
+            <a href="#">用户管理&raquo; </a>
+            <a href="#">个人信息</a>
+        </div>
+
+        <div class="container kv-main">
+            <div class="" style="margin:50px 30px">
+                <p class="text-left" style="margin-bottom:20px"><strong>&nbsp;用&nbsp;户&nbsp;名:</strong>&nbsp;&nbsp;{$data.user_name}&nbsp;</p>
+                <p class="text-left" style="margin-bottom:20px"><strong>真实姓名:</strong>&nbsp;&nbsp;&nbsp;{$data.relname}</p>
+                <p class="text-left" style="margin-bottom:20px"><strong>I&nbsp;D号&nbsp;码:</strong>&nbsp;&nbsp;&nbsp;{$data.id}</p>
+                <p class="text-left" style="margin-bottom:20px"><strong>注册邮箱:</strong>&nbsp;&nbsp;&nbsp;{$data.user_email}</p>
+                <p class="text-left" style="margin-bottom:20px"><strong>注册时间:</strong>&nbsp;&nbsp;&nbsp;{$signtime}</p>
+                <p class="text-left" style="margin-bottom:20px"><strong>登陆密码:</strong>&nbsp;&nbsp;&nbsp;********   </p>
+                <p class="text-left" style="margin-bottom:20px"><strong>手机号码:</strong>&nbsp;&nbsp;&nbsp;{$data.user_phone}   </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+{include file="public/footer"}
+

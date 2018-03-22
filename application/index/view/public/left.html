@@ -1,0 +1,52 @@
+<!--显示页面左部区域-->
+<style>
+	.left .userlogo .userimg {
+		width: 80px;
+		height: 70px;
+		margin: 0 auto;
+		background-image: url("__PUBLIC__/static/index/img/user.png");
+		background-size: 100% 100%;
+	}
+	.left .userlogo .userInfo {
+		height: 30px;
+		line-height: 30px;
+		text-align: center;
+		margin: 0 auto;
+		color: #9c2123;
+	}
+</style>
+<div class="container-fluid">
+		<div class="left">
+			<div class="userlogo" style="background:#f0f0f0">
+				<div class="userimg"></div>
+				<div class="userInfo">{$user_name}</div>
+			</div>
+			<ul class="list-group" >
+				<li class="list-group-item"><a href="{:url('index/index/index')}"><i class="glyphicon glyphicon-home"></i>个人首页</a></li>
+				<li class="list-group-item"><a href="#"><i class="glyphicon glyphicon-level-up"></i>上传信息</a></li>
+					<div class="upload" style="margin-left:40px;display:none" >
+						<ul >
+							<li style="margin-top:5px"><img src="__PUBLIC__/static/index/img/plane.png" style="width:20px;height:20px"><a style="font-size:16px;cursor:pointer" href="{:url('index/upload/airport')}">空运提单上传</a></li>
+							<li style="margin-top:5px"><img src="__PUBLIC__/static/index/img/boat.png" style="width:20px;height:20px"><a style="font-size:16px;cursor:pointer" href="{:url('index/upload/shipping')}">海运提单上传</a></a></li>
+						</ul>	
+					</div>
+				<li class="list-group-item" id="logis"><a href="#"><i class="glyphicon glyphicon-plane"></i>物流轨迹</a></li>
+					<div class="logistics " style="margin-left:40px;display:none" >
+					<ul >
+						<li style="margin-top:5px"><img src="__PUBLIC__/static/index/img/plane.png" style="width:20px;height:20px"><a style="font-size:16px;cursor:pointer" href="{:url('index/logistic/airport')}">空运提单信息</a></li>
+						<li style="margin-top:5px"><img src="__PUBLIC__/static/index/img/boat.png" style="width:20px;height:20px"><a style="font-size:16px;cursor:pointer" href="{:url('index/logistic/shipping')}">海运提单信息</a></li>
+					</ul>
+				</div>
+			<!--	<li class="list-group-item" id="billManage"><a href="{:url('billmanage/getAirportbill')}"><i class="glyphicon glyphicon-th-list"></i>提单管理</a></li>-->
+
+				<li class="list-group-item" id="userManage"><a href="#"><i class="glyphicon glyphicon-user"></i>用户管理</a></li>
+					<div class="userInfo " style="margin-left:40px;display:none" >
+					<ul >
+						<li style="margin-top:5px"><img src="__PUBLIC__/static/index/img/addr.png" style="width:20px;height:20px"><a style="font-size:16px;cursor:pointer" href="{:url('index/manage/address')}">地址管理</a></li>
+						<li style="margin-top:5px"><img src="__PUBLIC__/static/index/img/money.png" style="width:20px;height:20px"><a style="font-size:16px;cursor:pointer" href="{:url('index/manage/payinfo')}">付款信息</a></a></li>
+						<li style="margin-top:5px"><img src="__PUBLIC__/static/index/img/lock.png" style="width:20px;height:20px"><a style="font-size:16px;cursor:pointer" href="{:url('index/manage/userinfo')}">个人信息</a></a></li>
+					</ul>
+					</div>
+			</ul>
+		</div>
+
